@@ -770,8 +770,8 @@ const renderNeeds=()=>{const N=[],tmr=add(TODAY,1),d3=d=>wd(d).slice(0,3);
   S.orders.forEach(o=>{const f=esc(first(o)),sh=esc(shortO(o));
     if(o.status==='new')N.push({g:'new',o,u:o.pickup,n:f,d:`${sh}, ${d3(o.pickup)}, ${money(total(o))}`,b:['send','Send invoice']});
     else if(o.status==='invoiced'){const due=add(o.invoicedOn,2);if(due<=tmr)N.push({g:'invoiced',o,u:due,n:f,hot:due<=TODAY,d:`${due<TODAY?'Late':due===TODAY?'Due today':'Due tomorrow'}, ${money(total(o))}${o.remindedOn?', reminded':''}`,b:['paid','Mark as paid'],b2:S.auto.rem||o.remindedOn===TODAY?null:['remind','Remind']})}
-    else if(o.status==='paid'&&o.pickup===tmr&&!o.time)N.push({g:'paid',o,u:o.pickup,n:f,d:`${sh}, tomorrow${o.picker.type==='uber'?', Uber':''}`,b:['psend','Send text']})});
-  const L=zd?N.filter(n=>n.o.pickup===zd):N,GR=[['new','Send invoice'],['invoiced','Chase payment'],['paid','Set pickup time']];
+    else if(o.status==='paid'&&o.pickup===tmr&&!o.time&&!o.ptSent)N.push({g:'paid',o,u:o.pickup,n:f,d:`Pickup tomorrow, no time yet${o.picker.type==='uber'?'. Uber driver coming':''}`,b:['psend','Ask for a time']})});
+  const L=zd?N.filter(n=>n.o.pickup===zd):N,GR=[['new','Send invoice'],['invoiced','Chase payment'],['paid','Ask for a pickup time']];
   const hu=S.hol.filter(h=>!h.paid).length,rm=reminders().length;
   const extra=zd?'':[hu?`<button type="button" class="nx" data-go="holiday">${hu} holiday orders unpaid &#8250;</button>`:'',rm?`<button type="button" class="nx" data-go="customers">${rm} birthday texts to send &#8250;</button>`:''].join('');
   $('needs').innerHTML=`<h2>Needs you<small>${L.length?L.length+' orders':''}</small></h2>`+(L.length?GR.map(([g,lab])=>{const r=L.filter(n=>n.g===g).sort((a,b)=>a.u<b.u?-1:1);
@@ -1395,7 +1395,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(t.dataset.qa){const [k,id]=t.dataset.qa.split(':'),q=S.orders.find(x=>x.id===id);if(!q)return;
     if(k==='send'){const pv=q.log?q.log.slice():q.log;logM(q,'Invoice emailed');setSt(q,'invoiced',`Invoice emailed to ${q.email}.`);return}
     if(k==='remind'){q.remindedOn=TODAY;logM(q,'Payment reminder emailed');save();render();toast(`Reminder emailed to ${first(q)}.`);return}
-    if(k==='psend'){q.ptSent=TODAY;logM(q,`Pickup text sent to ${q.phone}`);save();render();toast(`Pickup text sent to ${first(q)}.`);return}
+    if(k==='psend'){q.ptSent=TODAY;logM(q,`Pickup text sent to ${q.phone}`);save();render();toast(q.time?`Pickup text sent to ${first(q)}.`:`Asked ${first(q)} what time works. Add it when they reply.`);return}
     if(k==='invoice'){const txt=invoiceText(q),ok=await copy(txt);setSt(q,'invoiced',ok?`${first(q)}'s invoice copied. Paste it in your email.`:'Copy the invoice from the box.');if(!ok){openD(q.id);showBox(txt)}}
     else if(k==='paid')setSt(q,'paid',`${first(q)} is now Paid, baking.`);
     else if(k==='done')setSt(q,'done',`${first(q)}'s order is complete.`);
