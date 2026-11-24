@@ -570,7 +570,7 @@ html{-webkit-tap-highlight-color:transparent}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 #scrim{z-index:60}#drawer{z-index:61}#pwrap{z-index:70}#toast{z-index:80}
 #board:not(.zoom) .day{cursor:zoom-in;transition:box-shadow .25s ease,transform .25s cubic-bezier(.22,1,.36,1)}@media(hover:hover){#board:not(.zoom) .day:hover{box-shadow:inset 0 0 0 2px var(--line)}}
-.vhead .ctl{flex-wrap:nowrap}.vhead .ctl .search{min-width:0}.btn{white-space:nowrap}
+.vhead .ctl{flex-wrap:nowrap}@media(max-width:760px){.vhead .ctl{flex-wrap:wrap}}.vhead .ctl .search{min-width:0}.btn{white-space:nowrap}
 .xl::-webkit-scrollbar,.btabs::-webkit-scrollbar,.bbody::-webkit-scrollbar{height:6px;width:6px}.xl::-webkit-scrollbar-thumb,.btabs::-webkit-scrollbar-thumb,.bbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}.xl::-webkit-scrollbar-track,.bbody::-webkit-scrollbar-track{background:transparent}
 .xl{scrollbar-width:thin;scrollbar-color:var(--line) transparent}.btabs{scrollbar-width:none}.btabs::-webkit-scrollbar{display:none}.bbody{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 </style>
