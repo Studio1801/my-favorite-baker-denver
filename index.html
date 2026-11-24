@@ -570,7 +570,7 @@ html{-webkit-tap-highlight-color:transparent}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 #scrim{z-index:60}#drawer{z-index:61}#pwrap{z-index:70}#toast{z-index:80}
 #board:not(.zoom) .day{cursor:zoom-in;transition:box-shadow .25s ease,transform .25s cubic-bezier(.22,1,.36,1)}@media(hover:hover){#board:not(.zoom) .day:hover{box-shadow:inset 0 0 0 2px var(--line)}}
-.vhead .ctl{flex-wrap:nowrap}@media(max-width:760px){.vhead .ctl{flex-wrap:wrap}}.vhead .ctl .search{min-width:0}.btn{white-space:nowrap}
+.vhead .ctl{flex-wrap:nowrap}@media(max-width:760px){.vhead .ctl{flex-wrap:wrap}}.vhead .ctl .search{min-width:0;flex:1 1 auto}.vhead .ctl>.btn{flex:none;padding-inline:20px}.btn{white-space:nowrap}
 .xl::-webkit-scrollbar,.btabs::-webkit-scrollbar,.bbody::-webkit-scrollbar{height:6px;width:6px}.xl::-webkit-scrollbar-thumb,.btabs::-webkit-scrollbar-thumb,.bbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}.xl::-webkit-scrollbar-track,.bbody::-webkit-scrollbar-track{background:transparent}
 .xl{scrollbar-width:thin;scrollbar-color:var(--line) transparent}.btabs{scrollbar-width:none}.btabs::-webkit-scrollbar{display:none}.bbody{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 @media(max-width:760px){.vhead .ctl{flex-wrap:wrap!important;gap:8px}.vhead .ctl>*{flex:none}.vhead .ctl .search{flex:1 1 100%}.seg2 button,.livet span{white-space:nowrap}.vhead .ctl #flink,.vhead .ctl #ocsv{flex:1}}
@@ -856,7 +856,7 @@ const COLS=[['pickup','Pickup',o=>o.pickup,o=>wds(o.pickup)],['time','Time',o=>o
  ['picker','Picks up',o=>PK(o),o=>esc(PK(o))],['placed','Ordered',o=>o.placed,o=>md(o.placed)],
 ];
 const renderOrders=()=>{$('v-orders').innerHTML=`<div class="vhead"><div><h1>All orders</h1><p class="sub">Every order from your form, sheet style. Tap a header to sort, tap a row for details.</p></div>
-  <div class="ctl" style="flex-wrap:nowrap"><input class="search" id="oq" type="search" placeholder="Search name, phone, email, flavor" value="${esc(oq)}" aria-label="Search orders"><button type="button" class="btn soft" id="ocsv" style="white-space:nowrap">Download sheet</button></div></div>
+  <div class="ctl" style="flex-wrap:nowrap"><input class="search" id="oq" type="search" placeholder="Search orders" value="${esc(oq)}" aria-label="Search orders"><button type="button" class="btn soft" id="ocsv" style="white-space:nowrap">Download sheet</button></div></div>
   <div class="otools"><div class="filters" id="ofl"></div><label class="dsel" for="oday"><span>Pickup day</span><select id="oday"></select></label></div>
   <div class="xl"><table class="xt"><thead id="oth"></thead><tbody id="otb"></tbody><tfoot id="otf"></tfoot></table></div>`;renderRows()};
 const oRows=()=>{const q=oq.toLowerCase(),wk0=WEEKS[0],wk1=add(WEEKS[0],3);
