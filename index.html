@@ -431,7 +431,7 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 @media(max-width:1000px){.club{grid-template-columns:minmax(0,1fr)}}
 .fbw{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:20px;align-items:start}.fbw.view{grid-template-columns:minmax(0,1fr)}
 .fb{background:#fff;border-radius:24px;box-shadow:inset 0 0 0 1px var(--line);position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;overflow:hidden}
-.btabs{display:flex;gap:4px;padding:10px;background:var(--rail);border-bottom:1px solid var(--line);overflow-x:auto}
+.btabs{display:flex;flex-wrap:wrap;gap:4px;padding:10px;background:var(--rail);border-bottom:1px solid var(--line)}
 .btabs button{border:0;background:none;border-radius:12px;padding:8px 12px;font-weight:600;font-size:14px;color:var(--soft);white-space:nowrap;min-height:38px}.btabs button[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(90,22,34,.12)}
 .bbody{padding:4px 18px 18px;overflow:auto;flex:1}
 .bsh{font:19px "Young Serif",Georgia,serif;font-weight:400;margin:20px 0 2px}.bnote{margin:0 0 8px;font-size:13px;color:var(--soft)}
@@ -1122,7 +1122,7 @@ const renderDbar=()=>{const b=$('dbar');if(!b)return;if(!S.fcd){b.hidden=true;re
 const tgl=(pth,lab)=>`<button type="button" class="tg sm" role="switch" aria-checked="${!!fget(pth)}" aria-label="${esc(lab)}" data-fcb="${pth}"></button>`;
 const stp=(pth,lab,mn,mx,pre,suf)=>`<div class="bstep"><button type="button" data-fcstep="${pth}:-1:${mn}:${mx}" aria-label="Less ${esc(lab)}">&minus;</button><b>${pre||''}${fget(pth)}${suf||''}</b><button type="button" data-fcstep="${pth}:1:${mn}:${mx}" aria-label="More ${esc(lab)}">+</button></div>`;
 const money_in=(pth,lab)=>`<label class="bpin"><span>$</span><input type="number" min="0" step="1" inputmode="numeric" value="${esc(fget(pth))}" data-fcn="${pth}" aria-label="${esc(lab)} price"></label>`;
-const builderHTML=()=>{const f=VIEWF(),Q=f.q,T=[['q','Questions'],['menu','Menu and prices'],['rules','Rules'],['notes','Customer notes'],['look','Look and messages'],['hist','History']];
+const builderHTML=()=>{const f=VIEWF(),Q=f.q,T=[['q','Questions'],['menu','Menu'],['rules','Rules'],['notes','Notes'],['look','Look'],['hist','History']];
   const QINFO={ig:'Short answer',pk:'Pick one',shape:'Dropdown',frost:'Dropdown',text:'Short answer',forWho:'Short answer',notes:'Long answer',allergies:'Short answer',photo:'File upload'};
   let body='';
   if(btab==='q')body=`<h3 class="bsh">Always asked</h3><p class="bnote">The basics Carlie needs for every order. These can't be turned off.</p>
