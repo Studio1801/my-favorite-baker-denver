@@ -602,7 +602,6 @@ html{-webkit-tap-highlight-color:transparent}
         <button type="button" class="btn soft" id="zback" hidden>&#8249; All days</button>
         <div class="nav"><button type="button" id="prev" aria-label="Previous week">&#8249;</button><button type="button" id="next" aria-label="Next week">&#8250;</button></div>
         <button type="button" class="btn soft" id="autob">Automatic messages</button>
-        <button type="button" class="btn soft" id="sim">See a new order come in</button>
       </div>
     </div>
     <div class="flow" id="flow"></div><p class="fnote" id="fnote">Every order moves left to right. Tap a step to see only those orders.</p>
@@ -1248,7 +1247,7 @@ let popD=null;
 const AU=[['inv','Send the invoice right away','As soon as an order comes in, email the price breakdown with a payment link.'],['pay','Mark orders paid by themselves','When they pay through the link, the order moves to Paid, baking.'],['rem','Payment reminder after 1 day','A friendly nudge if the invoice is still unpaid.'],['pick','Pickup reminder the day before','A text at 9am with the time and the address.'],['thx','Thank you after pickup','A short note with a link to leave a Google review.']];
 const renderAuto=()=>{const n=AU.filter(a=>S.auto[a[0]]).length;$('pop').innerHTML=`<div class="ptop"><div><p class="pk2">Runs for you</p><h2 id="ptitle">Automatic messages</h2><p class="pst pst-open">${n} of ${AU.length} on</p></div><button type="button" class="x" id="pclose" aria-label="Close">&times;</button></div>
   <div class="pg2">${AU.map(([k,t,d])=>`<div class="prow"><div><b>${t}</b><small>${d}</small></div><button type="button" class="tg" role="switch" aria-checked="${!!S.auto[k]}" aria-label="${t}" data-au="${k}"></button></div>`).join('')}</div>
-  <p class="hint" style="margin-top:14px">Every message still shows on the order, so you can always see what went out. Try "See a new order come in" with these on.</p>`};
+  <p class="hint" style="margin-top:14px">Every message still shows on the order, so you can always see what went out.</p>`};
 const renderFcPop=d=>{const top=(k,t)=>`<div class="ptop"><div><p class="pk2">${k}</p><h2 id="ptitle">${t}</h2></div><button type="button" class="x" id="pclose" aria-label="Close">&times;</button></div>`;
   const booked=S.orders.filter(o=>o.pickup>TODAY&&o.status!=='done').length;
   if(d==='pause'){$('pop').innerHTML=top('Order form','Pause new orders?')+`<p class="cfm">Your form will show a "not taking new orders right now" note. Nobody can send a new order until you turn it back on.</p><div class="safe"><b>Not affected</b>The ${booked} orders already booked, their invoices and their pickup days.</div><div class="pbtns"><button type="button" class="btn soft" id="pclose2">Keep taking orders</button><button type="button" class="btn danger" id="fpause">Pause the form</button></div>`;return}
