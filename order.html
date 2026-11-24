@@ -328,8 +328,11 @@ const merge=(a,b)=>{const o={...a};for(const k in b)o[k]=b[k]&&typeof b[k]==='ob
 const FCV=3;if(S&&S.fc&&S.fc.ver!==FCV){S.fc=null;S.fcd=null}
 const PREV=/[?&]preview=1/.test(location.search),SRC=S&&S.fc&&(PREV&&S.fcd?{...S.fcd,live:true}:S.fc);const F=SRC?merge(FC0,SRC):FC0;
 let inbox=[];try{inbox=JSON.parse(localStorage.getItem(INBOX))||[]}catch(e){}
-const ORDERS=[...(S&&Array.isArray(S.orders)?S.orders:[]),...inbox];
-const CAP=S&&S.cap||3,CAPD=S&&S.capd||{},CLOSED=S&&S.closed||[],EXTRA=S&&S.extra||[];
+let ORDERS,CAP,CAPD,CLOSED,EXTRA;
+const readAvail=()=>{let s2=S,ib=inbox;try{s2=JSON.parse(localStorage.getItem(KEY))||S;ib=JSON.parse(localStorage.getItem(INBOX))||[]}catch(e){}
+  const seen=new Set(),all=[...(s2&&Array.isArray(s2.orders)?s2.orders:[]),...ib].filter(o=>o&&o.id&&!seen.has(o.id)&&seen.add(o.id));
+  ORDERS=all.map(o=>({pickup:o.pickup}));CAP=s2&&s2.cap||3;CAPD=s2&&s2.capd||{};CLOSED=s2&&s2.closed||[];EXTRA=s2&&s2.extra||[]};
+readAvail();
 document.documentElement.style.setProperty('--acc',F.accent||'#5a1622');
 
 /* ---------- helpers ---------- */
@@ -353,6 +356,7 @@ const dayInfo=d=>{
   const n=ORDERS.filter(o=>o.pickup===d).length,cap=CAPD[d]||CAP;if(n>=cap)return{k:'full'};
   return{k:'ok',rush,left:cap-n}};
 
+addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==INBOX)return;readAvail();if(typeof refresh==='function'&&$('s-pickup')){if(O.pickup&&dayInfo(O.pickup).k!=='ok'){O.pickup='';keep()}refresh(['pickup','review'])}});
 /* ---------- order draft ---------- */
 const BLANK={size:'',qty:1,shape:'Round',flavor:'',filling:'',frosting:'Vanilla',colors:[],text:'',addons:[],forWho:'',notes:'',allergies:'',heard:'',colOther:'',pickup:'',pk:'me',pkname:'',pkphone:'',name:'',email:'',phone:'',ig:'',cq:{},ack:false};
 let O={...BLANK};try{const d=JSON.parse(localStorage.getItem(DRAFT));if(d)O={...BLANK,...d}}catch(e){}
@@ -677,7 +681,7 @@ const snapArt=(W=720,H=600)=>new Promise(res=>{try{c=document.createElement('can
   im.onload=()=>{x.drawImage(im,0,0,W,H);paintOps(x,W,H,O.art.ops,-1,false);try{res(c.toDataURL('image/png'))}catch(e){res('')}};im.onerror=()=>{paintOps(x,W,H,O.art.ops,-1,false);res(c.toDataURL('image/png'))};
   im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}catch(e){res('')}});
 
-const renderAll=()=>{if(!F.live){$('app').innerHTML=`<div class="paused"><h1>Taking a little break</h1><p>Carlie isn't taking new orders right now. Check back soon, or send a DM on Instagram.</p></div>`;$('bar').hidden=true;$('nav').hidden=true;return}
+const renderAll=()=>{readAvail();if(!F.live){$('app').innerHTML=`<div class="paused"><h1>Taking a little break</h1><p>Carlie isn't taking new orders right now. Check back soon, or send a DM on Instagram.</p></div>`;$('bar').hidden=true;$('nav').hidden=true;return}
   $('app').innerHTML=`<div class="wrap"><div class="stage">${STEPS.map((s,i)=>visible(i)?secHTML(i):'').join('')}</div><aside class="side" id="side">${sideHTML()}</aside></div>`;
   $('nav').innerHTML=navHTML();renderBar();observe();stMount()};
 const refresh=(only)=>{const y=scrollY;STEPS.forEach((s,i)=>{const el=$('s-'+s[0]);if(!visible(i)){if(el)el.remove();return}
@@ -721,7 +725,7 @@ const send=async()=>{if(sending)return;sending=true;const sb=document.querySelec
   window.scrollTo(0,0);photos=[];O={...BLANK,art:{ops:[]}};ST.mode=false;ST.hist=[]};
 
 /* ---------- events ---------- */
-const trySend=()=>{errs={};STEPS.forEach((x,i)=>{if(visible(i))Object.assign(errs,check(i))});
+const trySend=()=>{readAvail();errs={};STEPS.forEach((x,i)=>{if(visible(i))Object.assign(errs,check(i))});
   if(Object.keys(errs).length){refresh();const f=document.querySelector('.err');if(f){const sec=f.closest('.sec');scrollTo({top:f.getBoundingClientRect().top+scrollY-160,behavior:RM()?'auto':'smooth'});sec&&sec.classList.remove('shake');void sec?.offsetWidth;sec&&sec.classList.add('shake')}return}
   send()};
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;

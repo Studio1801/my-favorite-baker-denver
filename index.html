@@ -512,6 +512,32 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 .lbn{position:absolute;top:50%;transform:translateY(-50%);border:0;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:28px}.lbn.p{left:10px}.lbn.n{right:10px}
 .lbh{text-align:center;font-size:12.5px;opacity:.7;margin:10px 0 16px}
 @media(max-width:600px){.lbv{padding:0 8px}.lbn{top:auto;bottom:40px;transform:none}}
+
+/* tally */
+.tally{margin:18px 0 6px;background:var(--rail);border-radius:22px;padding:0}
+.tally summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 18px}.tally summary::-webkit-details-marker{display:none}
+.tsum{flex:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px}.tsum b{font:19px "Young Serif",Georgia,serif;font-weight:400}.tsum span{color:var(--soft);font-size:14px}
+.chev{width:9px;height:9px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg);transition:transform .35s cubic-bezier(.22,1,.36,1)}.tally[open] .chev{transform:rotate(-135deg)}
+.tbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;padding:0 14px 14px}
+.tcol{background:#fff;border-radius:18px;padding:14px 16px}
+.tcol h3{font-size:12.5px;font-weight:700;color:var(--soft);margin:14px 0 6px}.tcol h3:first-of-type{margin-top:6px}
+.tscope{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px}.tscope button{border:0;background:var(--rail);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13px;color:var(--soft);min-height:34px}.tscope button[aria-pressed=true]{background:var(--ink);color:#fff}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:2px}.tl li{display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line);font-size:15px}.tl li:last-child{border-bottom:0}.tl b{font-variant-numeric:tabular-nums;font-weight:700}
+.tcols{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;margin-top:6px}.tcols span{display:inline-flex;align-items:center;gap:5px}.tcols small{color:var(--soft);font-weight:700}
+.tfoot{margin:12px 0 0;font-size:13px;color:var(--soft)}.tfoot b{color:#8a5a00}
+.tnote{display:flex;flex-direction:column}.tnote label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.tnote label b{font:17px "Young Serif",Georgia,serif;font-weight:400}.tnote label span{font-size:12px;color:var(--soft)}
+#prepn{flex:1;min-height:200px;width:100%;border:0;border-radius:14px;background:var(--rail);padding:12px 14px;font:15px/1.55 inherit;color:var(--ink);resize:vertical}
+#prepn:focus{outline:2px solid var(--ink);outline-offset:1px;background:#fff}
+@media(max-width:760px){.tbody{grid-template-columns:1fr}}
+/* capacity meter */
+.capm{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:'n s k' 'b b b';align-items:center;gap:6px 8px;margin-top:8px;font-size:13px;color:var(--soft)}.capn{grid-area:n;white-space:nowrap}.capst{grid-area:s;white-space:nowrap}.capstep{grid-area:k}.capb{grid-area:b}
+.capn{font-variant-numeric:tabular-nums}.capn b{color:var(--ink);font-size:15px}
+.capb{flex:1;min-width:30px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.capb b{display:block;height:100%;background:var(--c-paid);border-radius:3px;transition:width .4s cubic-bezier(.22,1,.36,1)}
+.capm.full .capb b{background:var(--ink)}.capm.full .capst{color:var(--ink);font-weight:700}
+.capstep{display:inline-flex;background:#fff;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line)}.capstep button{border:0;background:none;width:28px;height:28px;font-size:16px;font-weight:700;color:var(--ink);border-radius:50%}.capstep button:disabled{opacity:.3}
+/* urgency */
+.slip.urg{box-shadow:inset 0 0 0 1.5px #ecc06a,0 8px 18px -14px rgba(138,90,0,.5)}
+.urgb{display:inline-block;vertical-align:1px;background:#fff1d6;color:#8a5a00;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
 .mlog{list-style:none;margin:0;padding:0}.mlog li{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px}
 .mlog i{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1.5px var(--mute)}.mlog i.ok{background:var(--c-paid);box-shadow:none}
 .mlog span{flex:1}.mlog em{font-style:normal;color:var(--soft);font-size:13px;white-space:nowrap}.mlog li.sch{color:var(--soft)}
@@ -636,6 +662,7 @@ html{-webkit-tap-highlight-color:transparent}
       </div>
     </div>
     <div class="flow" id="flow"></div><p class="fnote" id="fnote">Every order moves left to right. Tap a step to see only those orders.</p>
+    <details class="tally" id="tally"></details>
     <div class="main" id="wmain">
       <div class="board" id="board"></div>
       <div class="panel needs" id="needs"></div>
@@ -783,26 +810,56 @@ const custOf=o=>custs().find(c=>c.email===o.email);
 const reminders=()=>S.orders.filter(o=>o.bday&&o.status==='done').map(o=>({o,on:add(o.pickup,365)})).filter(x=>x.on>TODAY&&x.on<=add(TODAY,60)&&!S.sent.includes(x.o.id)&&!S.orders.some(y=>y.email===x.o.email&&y.pickup>TODAY)).sort((a,b)=>a.on<b.on?-1:1);
 
 /* ---------- This week ---------- */
-const card=o=>{const c=custOf(o),n=c?c.orders.length:1;return `<button type="button" class="slip s-${o.status}${o.id===last?' land':''}${sf&&sf!==o.status?' dim':''}" data-open="${o.id}">
+const urg=o=>{if(o.status!=='new'&&o.status!=='invoiced')return'';const g=gap(TODAY,o.pickup);return g<0?'':g===0?'Due today':g===1?'Tomorrow':g===2?'In 2 days':''};
+const card=o=>{const c=custOf(o),n=c?c.orders.length:1;return `<button type="button" class="slip s-${o.status}${urg(o)?' urg':''}${o.id===last?' land':''}${sf&&sf!==o.status?' dim':''}" data-open="${o.id}">
 <span class="row"><span class="tm${o.time?'':' no'}">${o.time?t12(o.time):'Time not set'}</span><span class="amt">${money(total(o))}</span></span>
 <b class="nm">${esc(o.name)}</b><span class="sp">${esc(spec(o))}</span>${o.art?`<img class="artth" src="${o.art}" alt="Painted design" loading="lazy">`:o.text?`<span class="wr">${esc(o.text)}</span>`:''}
-${trk(o.status)}<span class="row st"><span class="stl">${ST[o.status]}</span>${who(o)?`<span class="who">${who(o)}</span>`:''}</span>
+${trk(o.status)}<span class="row st"><span class="stl">${ST[o.status]}${urg(o)?`<span class="urgb">${urg(o)}</span>`:''}</span>${who(o)?`<span class="who">${who(o)}</span>`:''}</span>
 ${n>1?`<span class="sp">${ord(n)} order with you</span>`:''}</button>`};
 const byTime=(a,b)=>(a.time||'99')<(b.time||'99')?-1:(a.time||'99')>(b.time||'99')?1:a.name<b.name?-1:1;
 const tally=a=>{const m={};a.forEach(([k,n])=>m[k]=(m[k]||0)+n);return Object.entries(m).sort((x,y)=>y[1]-x[1])};
 const ALLD=WEEKS.flatMap(w=>[0,1,2,3].map(i=>add(w,i)));
+
+/* ---------- bake tally + prep notes ---------- */
+let tday=null,prepT=null;
+const itemKey=o=>{const s=SIZES[o.size];if(o.size==='taste')return['Tasting box',1,0];if(s.doz)return[`${s.n}, ${o.flavor||'flavor not set'}`,o.qty,1];
+  const shp=o.size==='sheet'||o.size==='twelve'?'':`, ${String(o.shape||'Round').toLowerCase()}`;return[`${s.n}${shp}, ${o.flavor||'flavor not set'}${o.filling?` (${o.filling.toLowerCase()} filling)`:''}`,1,0]};
+const tallyData=os=>{const it={},dz={};os.forEach(o=>{const[k,n,d]=itemKey(o);it[k]=(it[k]||0)+n;if(d)dz[k]=1});
+  const items=Object.entries(it).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([k,n])=>[k,n,!!dz[k]]);
+  const adds=tally(os.flatMap(o=>o.addons.map(a=>[a,1]))),fr=tally(os.filter(o=>o.frosting).map(o=>[o.frosting+' buttercream',1])),cols=tally(os.flatMap(o=>o.colors.map(c=>[c,1])));
+  const cakes=os.filter(o=>!SIZES[o.size].doz&&o.size!=='taste').length,doz=os.filter(o=>SIZES[o.size].doz).reduce((t,o)=>t+o.qty,0),tb=os.filter(o=>o.size==='taste').length;
+  return{items,adds,fr,cols,cakes,doz,tb}};
+const renderTally=()=>{const el=$('tally');if(!el)return;const days=[0,1,2,3].map(i=>add(WEEKS[wk],i)),scope=zd?'day':S.tscope||'week',day=zd||(tday&&days.includes(tday)?tday:days[0]);
+  const os=S.orders.filter(o=>o.status!=='done'&&(scope==='week'?o.pickup>=days[0]&&o.pickup<=days[3]:o.pickup===day)),T=tallyData(os),unpaid=os.filter(o=>o.status==='new'||o.status==='invoiced').length;
+  const wkey=WEEKS[wk],note=(S.prep||{})[wkey]||'';
+  const sum=[T.cakes&&`${T.cakes} cake${T.cakes>1?'s':''}`,T.doz&&`${T.doz} dozen cupcakes`,T.tb&&`${T.tb} tasting box${T.tb>1?'es':''}`].filter(Boolean).join(', ')||'Nothing yet';
+  const L=(a,fmt)=>`<ul class="tl">${a.map(x=>`<li><b>${fmt?fmt(x):x[1]+' &times;'}</b><span>${esc(x[0])}</span></li>`).join('')}</ul>`;
+  el.open=S.tallyOpen==null?innerWidth>700:S.tallyOpen;
+  el.innerHTML=`<summary><span class="tsum"><b>Bake tally and prep notes</b><span>${scope==='week'?(wk===0?'This week':'Week of '+md(days[0])):wds(day)}: ${sum}</span></span><i class="chev" aria-hidden="true"></i></summary>
+  <div class="tbody"><div class="tcol">
+    ${zd?'':`<div class="tscope" role="group" aria-label="Count for"><button type="button" data-tsc="week" aria-pressed="${scope==='week'}">Whole week</button>${days.map(d=>`<button type="button" data-tsc="day" data-tday="${d}" aria-pressed="${scope==='day'&&day===d}">${wd(d).slice(0,3)} ${D(d).getDate()}</button>`).join('')}</div>`}
+    ${os.length?`<h3>Cakes and cupcakes</h3>${L(T.items,x=>x[2]?`${x[1]} doz`:`${x[1]} &times;`)}
+    ${T.fr.length?`<h3>Buttercream</h3>${L(T.fr)}`:''}${T.cols.length?`<div class="tcols">${T.cols.map(([c,n])=>`<span><i class="sw" style="background:${SW[c]||'#fff'}"></i>${esc(c)} <small>${n}</small></span>`).join('')}</div>`:''}
+    ${T.adds.length?`<h3>Add-ons</h3>${L(T.adds)}`:''}
+    <p class="tfoot">${os.length} order${os.length>1?'s':''} not picked up yet${unpaid?`, <b>${unpaid} not paid</b>`:''}. <button type="button" class="lk" data-tcopy="1">Copy list</button></p>`:'<p class="sub">No orders for this '+(scope==='week'?'week':'day')+' yet.</p>'}
+  </div><div class="tcol tnote"><label for="prepn"><b>My prep notes</b><span id="prepst">${note?'Saved':'Only you see these'}</span></label>
+    <textarea id="prepn" placeholder="My weekly prep notes... shopping list, buttercream, bake day plan">${esc(note)}</textarea><p class="tfoot">Saved for the week of ${md(days[0])}.</p></div></div>`};
+const tallyText=()=>{const days=[0,1,2,3].map(i=>add(WEEKS[wk],i)),scope=zd?'day':S.tscope||'week',day=zd||(tday&&days.includes(tday)?tday:days[0]);
+  const os=S.orders.filter(o=>o.status!=='done'&&(scope==='week'?o.pickup>=days[0]&&o.pickup<=days[3]:o.pickup===day)),T=tallyData(os);
+  return [(scope==='week'?'Week of '+md(days[0]):wds(day)),'',...T.items.map(([k,n,d])=>`${d?n+' doz':n+' x'} ${k}`),...(T.fr.length?['',...T.fr.map(([k,n])=>`${n} x ${k}`)]:[]),...(T.cols.length?['Colors: '+T.cols.map(([c,n])=>`${c} (${n})`).join(', ')]:[]),...(T.adds.length?['','Add-ons',...T.adds.map(([k,n])=>`${n} x ${k}`)]:[])].join('\n')};
 const renderWeek=()=>{const days=zd?[zd]:[0,1,2,3].map(i=>add(WEEKS[wk],i)),wo=S.orders.filter(o=>o.pickup>=days[0]&&o.pickup<=days[days.length-1]),zi=ALLD.indexOf(zd);
   $('title').textContent=zd?wd(zd)+', '+md(zd):(wk===0?'This week, ':'Week of ')+md(days[0]);
   $('sub').textContent=zd?`${wo.length} order${wo.length===1?'':'s'} for this pickup day. Pickups 8am to 1:30pm in Thornton.`:`${wo.length} order${wo.length===1?'':'s'} for pickup ${md(days[0])} to ${md(days[3])}. Pickups 8am to 1:30pm in Thornton.`;
   $('prev').disabled=zd?zi<=0:wk===0;$('next').disabled=zd?zi>=ALLD.length-1:wk===WEEKS.length-1;$('zback').hidden=!zd;$('board').className='board'+(zd?' zoom':'');$('bake').hidden=!zd;
   $('flow').hidden=$('fnote').hidden=$('wmain').hidden=!!zd;$('dayv').hidden=!zd;if(zd){renderDay();return}
   $('board').innerHTML=days.map(d=>{const s=dayState(d),os=S.orders.filter(o=>o.pickup===d).sort(byTime);
-    const lab=s.k==='hol'?'Closed for Thanksgiving':s.k==='closed'?'Closed, hidden on your form':s.k==='full'?'Full':s.k==='open'?`${s.left} of ${s.c} spots open`:'';
+    const lab=s.k==='hol'?'Closed for Thanksgiving':s.k==='closed'?'Closed, hidden on your form':s.k==='past'?'':s.k==='off'?'Not a pickup day':'';
+    const capm=s.k==='open'||s.k==='full'||(s.k==='past'&&os.length)?`<div class="capm${s.k==='full'?' full':''}"><span class="capn"><b>${s.n}</b> / ${s.c}</span><i class="capb" aria-hidden="true"><b style="width:${Math.min(100,s.n/s.c*100)}%"></b></i>${s.k==='past'?'':`<span class="capst">${s.k==='full'?'Full':`${s.left} open`}</span><span class="capstep" role="group" aria-label="Daily limit for ${wd(d)}"><button type="button" data-capd="${d}:-1" aria-label="One less spot"${s.c<=Math.max(1,s.n)?' disabled':''}>&minus;</button><button type="button" data-capd="${d}:1" aria-label="One more spot"${s.c>=12?' disabled':''}>+</button></span>`}</div>`:'';
     const tog=s.k==='closed'?`<button type="button" class="lk" data-shut="${d}">Reopen</button>`:s.k==='open'||s.k==='full'?`<button type="button" class="lk" data-shut="${d}">Close day</button>`:'';
-    return `<section data-dayz="${d}" title="Open ${wd(d)}" class="day${s.k==='hol'||s.k==='closed'?' shut':''}"><div class="dh"><div class="top"><h3>${wd(d)}</h3></div><p><span>${md(d)}${lab?', '+lab.toLowerCase():''}</span>${tog}</p></div>
+    return `<section data-dayz="${d}" title="Open ${wd(d)}" class="day${s.k==='hol'||s.k==='closed'?' shut':''}"><div class="dh"><div class="top"><h3>${wd(d)}</h3></div><p><span>${md(d)}${lab?', '+lab.toLowerCase():''}</span>${tog}</p>${capm}</div>
     ${os.map(card).join('')}${!os.length&&s.k!=='hol'&&s.k!=='closed'?'<p class="note">Nothing yet. Still open on your form.</p>':''}</section>`}).join('');
   $('flow').innerHTML=ORD.map(k=>`<button type="button" class="fs s-${k}" data-sf="${k}" aria-pressed="${sf===k}"><b>${wo.filter(o=>o.status===k).length}</b><span>${ST[k]}</span><small>${SH[k]}</small></button>`).join('');
-  renderNeeds();
+  renderNeeds();renderTally();
   if(zd){const b=wo.filter(o=>o.status==='paid'),pn=wo.filter(o=>o.status==='new'||o.status==='invoiced');
     const pend=pn.length?`<p class="pend"><b>${pn.length} not paid yet:</b> ${pn.map(o=>esc(first(o))).join(', ')}. Hold off baking these until the payment is in.</p>`:'';
     if(!b.length)$('bake').innerHTML='<h2>What to bake</h2><p class="sub">Nothing paid yet for this day.</p>'+pend;
@@ -1486,6 +1543,9 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(t.dataset.sort){const k=t.dataset.sort;osort=osort.k===k?{k,d:-osort.d}:{k,d:1};renderRows();return}
   if(t.id==='ocsv'){if(await csvOut())toast('Sheet saved. It opens in Excel or Google Sheets.');return}
   if(t.dataset.f){of=t.dataset.f;renderRows();fadeIn($('otb'));return}
+  if(t.dataset.capd){const[d,dl]=t.dataset.capd.split(':'),n=cnt(d),c=Math.min(12,Math.max(Math.max(1,n),capOf(d)+ +dl));S.capd[d]=c;save();render();toast(`${wds(d)} now takes ${c} order${c>1?'s':''}. Your form ${c>n?`shows ${c-n} open spot${c-n>1?'s':''}`:'shows it as full'}.`);return}
+  if(t.dataset.tsc){S.tscope=t.dataset.tsc;if(t.dataset.tday)tday=t.dataset.tday;save();renderTally();return}
+  if(t.dataset.tcopy){copy(tallyText()).then(ok=>toast(ok?'Bake list copied. Paste it into Notes.':'Could not copy on this browser.'));return}
   if(t.dataset.shut){const d=t.dataset.shut,was=S.closed.includes(d);S.closed=was?S.closed.filter(x=>x!==d):[...S.closed,d];save();render();toast(was?`${wds(d)} is open again on your form.`:`${wds(d)} is closed and hidden on your form.`);return}
   if(t.id==='reset'){S=fresh();S.chk={};S.capd={};S.extra=[];S.hrs={};S.note={};S.msgd={};S.cnote={};S.goal=3000;S.fc=FC0();S.fcd=null;S.fch=[];S.auto={inv:true,pay:true,rem:true,pick:true,thx:true};save();wk=0;zd=null;cm=0;closeD();render();toast('Demo reset.');return}
   if(t.id==='sim'){const nx=INCOMING.find(x=>!S.orders.some(o=>o.id===x.id));if(!nx){toast('That was the last sample. Try the Order form tab, or reset the demo.');return}
@@ -1514,7 +1574,8 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(popD)closePop();else if(openId)closeD();else if(zd&&cur==='week')zoomOut()}
   if(zd&&cur==='week'&&!openId&&(e.key==='ArrowLeft'||e.key==='ArrowRight')&&!e.target.matches('input,select,textarea'))$(e.key==='ArrowLeft'?'prev':'next').click();if(e.key==='Enter'&&e.target.matches('tr[data-open]'))openD(e.target.dataset.open)});
-document.addEventListener('input',e=>{const ti=e.target;if(mc&&ti.id==='mc-body'){mc.body=ti.value;return}if(mc&&ti.id==='mc-subj'){mc.subj=ti.value;return}if(ti.dataset.fcs||ti.dataset.fcn){fset(ti.dataset.fcs||ti.dataset.fcn,ti.dataset.fcn?Math.max(0,+ti.value||0):ti.value);const was=!!S.fcd;clean();save();renderPreview();if(was!==!!S.fcd||S.fcd)renderDbar();ti.closest('.br,.bcq')?.classList.toggle('x',0);return}if(e.target.id==='wif'){whatIf=+e.target.value;const pm=+$('wifm').dataset.pm||0;renderWif();return}if(e.target.id==='cq'){cq=e.target.value;renderCustomers();const i=$('cq');i.focus();i.setSelectionRange(cq.length,cq.length);return}if(e.target.id==='cnote'&&popD&&popD.startsWith('cust:')){const v=e.target.value.trim(),em=popD.slice(5);if(v)S.cnote[em]=v;else delete S.cnote[em];save();return}if(popD==='hol'&&e.target.dataset.hfld){hd[e.target.dataset.hfld]=e.target.value;return}if(e.target.id==='oq'){oq=e.target.value;renderRows()}else if(e.target.closest('#oform'))upd()});
+document.addEventListener('toggle',e=>{if(e.target.id==='tally'){S.tallyOpen=e.target.open;save()}},true);
+document.addEventListener('input',e=>{const ti=e.target;if(ti.id==='prepn'){S.prep=S.prep||{};S.prep[WEEKS[wk]]=ti.value;$('prepst').textContent='Saving';clearTimeout(prepT);prepT=setTimeout(()=>{$('prepst').textContent=save()?'Saved':'Could not save';},450);return}if(mc&&ti.id==='mc-body'){mc.body=ti.value;return}if(mc&&ti.id==='mc-subj'){mc.subj=ti.value;return}if(ti.dataset.fcs||ti.dataset.fcn){fset(ti.dataset.fcs||ti.dataset.fcn,ti.dataset.fcn?Math.max(0,+ti.value||0):ti.value);const was=!!S.fcd;clean();save();renderPreview();if(was!==!!S.fcd||S.fcd)renderDbar();ti.closest('.br,.bcq')?.classList.toggle('x',0);return}if(e.target.id==='wif'){whatIf=+e.target.value;const pm=+$('wifm').dataset.pm||0;renderWif();return}if(e.target.id==='cq'){cq=e.target.value;renderCustomers();const i=$('cq');i.focus();i.setSelectionRange(cq.length,cq.length);return}if(e.target.id==='cnote'&&popD&&popD.startsWith('cust:')){const v=e.target.value.trim(),em=popD.slice(5);if(v)S.cnote[em]=v;else delete S.cnote[em];save();return}if(popD==='hol'&&e.target.dataset.hfld){hd[e.target.dataset.hfld]=e.target.value;return}if(e.target.id==='oq'){oq=e.target.value;renderRows()}else if(e.target.closest('#oform'))upd()});
 document.addEventListener('change',e=>{const t=e.target;
   if(t.id==='pack'){$('fpuby').disabled=!t.checked;return}
   if(t.dataset.fcsel){fset(t.dataset.fcsel,t.value);clean();save();render();return}
