@@ -574,6 +574,11 @@ html{-webkit-tap-highlight-color:transparent}
 .xl::-webkit-scrollbar,.btabs::-webkit-scrollbar,.bbody::-webkit-scrollbar{height:6px;width:6px}.xl::-webkit-scrollbar-thumb,.btabs::-webkit-scrollbar-thumb,.bbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}.xl::-webkit-scrollbar-track,.bbody::-webkit-scrollbar-track{background:transparent}
 .xl{scrollbar-width:thin;scrollbar-color:var(--line) transparent}.btabs{scrollbar-width:none}.btabs::-webkit-scrollbar{display:none}.bbody{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 @media(max-width:760px){.vhead .ctl{flex-wrap:wrap!important;gap:8px}.vhead .ctl>*{flex:none}.vhead .ctl .search{flex:1 1 100%}.seg2 button,.livet span{white-space:nowrap}.vhead .ctl #flink,.vhead .ctl #ocsv{flex:1}}
+.note2{margin:14px 0 0;padding:10px 12px;border-radius:12px;background:#fff6e5;color:#8a5200;font-size:13px}
+.fpv{padding:0!important;display:block!important}.fpv iframe{display:block;width:100%;height:calc(100vh - 180px);min-height:640px;border:0;background:#fffaf9}
+.fbw.view .fpv{max-width:none!important}.fbw.view .fpv iframe{height:calc(100vh - 160px)}
+.btabs button{flex:none!important}
+@media(max-width:760px){.fbw.view .fpv iframe{height:80vh}}
 </style>
 </head>
 <body>
@@ -709,8 +714,9 @@ const FC0=()=>({live:true,title:'Cake order form',intro:'Pickup only in Thornton
   sizes:Object.fromEntries(Object.entries(SIZES).map(([k,v])=>[k,{on:true,p:v.p}])),flav:FLAV.map(n=>({n,on:true,up:UP[n]||0})),fill:FILL.map(n=>({n,on:true})),fillFee:5,
   cols:Object.keys(SW).map(n=>({n,on:true})),incl:3,colFee:5,adds:Object.entries(ADD).map(([n,p])=>({n,p,on:true})),
   q:{ig:{on:true,req:false,l:'Instagram'},pk:{on:true,l:'Who picks it up?'},shape:{on:true,l:'Shape'},frost:{on:true,l:'Buttercream'},text:{on:true,req:false,l:'Writing on the cake'},forWho:{on:true,req:false,l:'Who is it for?'},notes:{on:true,req:false,l:'Describe your cake'},allergies:{on:true,req:false,l:'Allergies'},photo:{on:true,req:false,l:'Inspiration photos'}},
+  notes:{"hello": "My name is Carlie! Please read these before you order. I know it's a lot, I just want this to be smooth and easy for both of us.", "sign": "Thank you so much! xo, Carlie", "heroKick": "hi there, cake lover", "heroTitle": "Let's make your cake.", "heroLede": "Tell me what you're dreaming up. Pick your size, flavor and colors, and watch it come together as you go.", "groups": [{"id": "g1", "ic": "pin", "t": "Pickup", "on": true, "body": "Home baker in Thornton, | about 25 minutes outside Denver. I send the address the day before pickup.\nTuesday to Friday, 8am to 1:30pm. | I reach out the day before to set a time that works for both of us.\nPlease don't be late. | I work two full time jobs and plan my day around your pickup. If you're running late, just message me.\nSomeone else picking up? | I need their name and phone number so I can coordinate with them."}, {"id": "g2", "ic": "car", "t": "Delivery and travel", "on": true, "body": "No delivery, | but you can book an Uber driver to grab it.\nOnce it leaves my hands, | it's not my liability. If it's dropped or damaged, I can't fix it.\nKeep car rides under 2 hours, | especially in summer. Buttercream softens fast and can melt off.\nFridge friendly. | Cakes keep in the fridge up to 4 days after pickup."}, {"id": "g3", "ic": "clock", "t": "Booking", "on": true, "body": "Order at least 7 days ahead. | Anything sooner has a $50 rush fee.\nBook no more than 2 months out. | Need a cake June 1? The soonest you can order is April 1.\nDate not showing? | That means I'm fully booked that day."}, {"id": "g4", "ic": "mail", "t": "Ordering and payment", "on": true, "body": "Be 100% sure before ordering. | Flavors, fillings, colors and design all go on this form. Need creative help? DM me first.\nPlease don't email add-ons later. | Everything needs to be on the form.\nI'll email your invoice | with a payment link. It may take a few days since I work full time.\nPay in full within 2 days | to get on my books. Not ready to pay yet? Please wait to order.\nThe flavors below | are the only ones I'm offering right now."}, {"id": "g5", "ic": "gift", "t": "Gender reveal cakes", "on": true, "body": "Email me the gender | at myfavoritebakerdenver@gmail.com. I need it before I can accept your order.\nStill waiting on bloodwork? | Please wait to order until you have the results."}]},
   custom:[{id:'c1',l:'How did you hear about us?',t:'choice',o:'Instagram, A friend, Google, Saw one at a party',req:false,on:true}]});
-S.fc=Object.assign(FC0(),S.fc||{});S.fch=S.fch||[];S.goal=S.goal||3000;S.cnote=S.cnote||{};S.auto=S.auto||{inv:true,pay:true,rem:true,pick:true,thx:true};
+S.fc=Object.assign(FC0(),S.fc||{});if(!S.fc.notes)S.fc.notes=FC0().notes;S.fch=S.fch||[];S.goal=S.goal||3000;S.cnote=S.cnote||{};S.auto=S.auto||{inv:true,pay:true,rem:true,pick:true,thx:true};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 let cur='week',wk=0,cm=0,openId=null,last=null,undoFn=null,tt,of='upcoming',oq='',sf=null,zd=null;
 
@@ -1074,7 +1080,9 @@ const formHTML=()=>{const f=S.fc,Q=f.q,pr=v=>f.showPrices?v:'';
     return c.t==='long'?`<label class="f" for="${nm}">${lb}<textarea id="${nm}" name="${nm}"></textarea></label>`:c.t==='date'?`<label class="f" for="${nm}">${lb}<input id="${nm}" name="${nm}" type="date"></label>`:
     c.t==='choice'||c.t==='checks'||c.t==='yesno'?`<p class="ql">${lb}</p><div class="opts" style="margin-bottom:12px">${opt((c.t==='yesno'?['Yes','No']:ops(c)).map(x=>[x,esc(x)]),nm,'',c.t==='checks'?'checkbox':'radio')}</div>`:`<label class="f" for="${nm}">${lb}<input id="${nm}" name="${nm}"></label>`}).join('')}</fieldset>`:''}
   <button type="submit" class="btn fsub">Send my order</button><p class="err" id="ferr" hidden></p></form>`};
-const renderPreview=()=>{const w=$('fpv');if(!w)return;w.style.setProperty('--acc',VIEWF().accent);w.innerHTML=withDraft(formHTML)+(S.fc.live?'<aside class="sum" id="fsum"></aside>':'');formDirty=false;if(S.fc.live)upd();
+const renderPreview=()=>{const w=$('fpv');if(!w)return;formDirty=false;
+  let f=w.querySelector('iframe');if(!f){w.innerHTML='<iframe title="Customer order form preview" src="/order?preview=1" loading="lazy"></iframe>';f=w.querySelector('iframe')}
+  else{clearTimeout(window.__pv);window.__pv=setTimeout(()=>{try{const y=f.contentWindow.scrollY;f.onload=()=>{try{f.contentWindow.scrollTo(0,y)}catch(e){}f.onload=null};f.contentWindow.location.reload()}catch(e){f.src=f.src}},350)}
   const u=$('pvlive');if(u){u.className='pvst '+(S.fc.live?'on':'off');u.textContent=S.fc.live?'Taking orders':'Paused'}renderDbar()};
 const FD=()=>S.fcd||(S.fcd=JSON.parse(JSON.stringify(S.fc)));
 const clean=()=>{if(S.fcd&&JSON.stringify({...S.fcd,live:0})===JSON.stringify({...S.fc,live:0}))S.fcd=null};
@@ -1103,6 +1111,10 @@ const fdiff=(A,B)=>{const L=[],W=[],add=(t,w)=>{L.push(t);if(w)W.push(w)},m=v=>'
   Object.entries(B.q).forEach(([k,q])=>{const a=A.q[k];if(a.l!==q.l)add(`"${a.l}" renamed to "${q.l}"`);if(a.on!==q.on)add(`"${q.l}" ${q.on?'now shows':'is hidden'}`);if(a.req!==q.req)add(`"${q.l}" is ${q.req?'now required':'optional now'}`,q.req&&`Customers can't send the form without answering "${q.l}".`)});
   B.custom.forEach(c=>{const a=A.custom.find(x=>x.id===c.id);if(!a)add(`New question: "${c.l||'Untitled'}"`,!c.l.trim()&&'One new question has no text yet, so it won\'t show.');else if(JSON.stringify(a)!==JSON.stringify(c))add(`Question "${c.l}" changed`,c.req&&!a.req&&`"${c.l}" is now required.`)});
   A.custom.forEach(c=>{if(!B.custom.find(x=>x.id===c.id))add(`Question removed: "${c.l}"`)});
+  const NA=A.notes||{},NB=B.notes||{};['heroKick','heroTitle','heroLede','hello','sign'].forEach(k=>{if(NA[k]!==NB[k])add({heroKick:'Handwritten welcome line',heroTitle:'Headline',heroLede:'Line under the headline',hello:'Note card hello',sign:'Sign off'}[k]+' changed')});
+  (NB.groups||[]).forEach(g=>{const a=(NA.groups||[]).find(x=>x.id===g.id);if(!a)add(`New note section: ${g.t}`);else{if(a.t!==g.t)add(`Note section renamed to ${g.t}`);if(a.body!==g.body)add(`Notes under ${g.t} changed`);if(a.on!==g.on)add(`${g.t} notes ${g.on?'now show':'are hidden'}`)}});
+  (NA.groups||[]).forEach(g=>{if(!(NB.groups||[]).find(x=>x.id===g.id))add(`Note section removed: ${g.t}`)});
+  if((NA.groups||[]).map(g=>g.id).join()!==(NB.groups||[]).map(g=>g.id).join()&&(NA.groups||[]).length===(NB.groups||[]).length)add('Note sections reordered');
   return{L,W:W.filter(Boolean)}};
 const renderDbar=()=>{const b=$('dbar');if(!b)return;if(!S.fcd){b.hidden=true;return}const{L}=fdiff(S.fc,S.fcd);if(!L.length){b.hidden=true;return}b.hidden=false;
   b.innerHTML=`<div><b>${L.length} unsaved change${L.length>1?'s':''}</b><span>Customers still see the old form until you publish.</span></div><button type="button" class="btn sm soft" id="fdisc">Discard</button><button type="button" class="btn sm" id="fpub">Review and publish</button>`;
@@ -1110,7 +1122,7 @@ const renderDbar=()=>{const b=$('dbar');if(!b)return;if(!S.fcd){b.hidden=true;re
 const tgl=(pth,lab)=>`<button type="button" class="tg sm" role="switch" aria-checked="${!!fget(pth)}" aria-label="${esc(lab)}" data-fcb="${pth}"></button>`;
 const stp=(pth,lab,mn,mx,pre,suf)=>`<div class="bstep"><button type="button" data-fcstep="${pth}:-1:${mn}:${mx}" aria-label="Less ${esc(lab)}">&minus;</button><b>${pre||''}${fget(pth)}${suf||''}</b><button type="button" data-fcstep="${pth}:1:${mn}:${mx}" aria-label="More ${esc(lab)}">+</button></div>`;
 const money_in=(pth,lab)=>`<label class="bpin"><span>$</span><input type="number" min="0" step="1" inputmode="numeric" value="${esc(fget(pth))}" data-fcn="${pth}" aria-label="${esc(lab)} price"></label>`;
-const builderHTML=()=>{const f=VIEWF(),Q=f.q,T=[['q','Questions'],['menu','Menu and prices'],['rules','Rules'],['look','Look and messages'],['hist','History']];
+const builderHTML=()=>{const f=VIEWF(),Q=f.q,T=[['q','Questions'],['menu','Menu and prices'],['rules','Rules'],['notes','Customer notes'],['look','Look and messages'],['hist','History']];
   const QINFO={ig:'Short answer',pk:'Pick one',shape:'Dropdown',frost:'Dropdown',text:'Short answer',forWho:'Short answer',notes:'Long answer',allergies:'Short answer',photo:'File upload'};
   let body='';
   if(btab==='q')body=`<h3 class="bsh">Always asked</h3><p class="bnote">The basics Carlie needs for every order. These can't be turned off.</p>
@@ -1157,6 +1169,18 @@ const builderHTML=()=>{const f=VIEWF(),Q=f.q,T=[['q','Questions'],['menu','Menu 
     <h3 class="bsh">Button color</h3><div class="chips">${[['#5a1622','Burgundy'],['#c0163f','Cherry'],['#2f7d57','Sage'],['#b5741c','Caramel']].map(([c,n])=>`<button type="button" class="chip" aria-pressed="${f.accent===c}" data-fcacc="${c}"><i class="sw" style="background:${c}"></i>${n}</button>`).join('')}</div>
     <h3 class="bsh">Prices</h3><div class="br"><div class="bln">Show prices next to options</div>${tgl('showPrices','Show prices')}</div><div class="br"><div class="bln">Show the running total<small>Customers see the price add up as they pick</small></div>${tgl('showTotal','Show running total')}</div>
     <h3 class="bsh">After they send it</h3><label class="bf">Thank you message<textarea class="bi wide" rows="3" data-fcs="thanks">${esc(f.thanks)}</textarea></label>`;
+  if(btab==='notes'){const N=f.notes,IC={pin:'Pin',car:'Car',clock:'Clock',mail:'Mail',gift:'Gift',cal:'Calendar'};body=`<h3 class="bsh">Top of the form</h3><p class="bnote">The big welcome customers see first.</p>
+    <label class="bf">Small handwritten line<input class="bi wide" value="${esc(N.heroKick)}" data-fcs="notes.heroKick"></label>
+    <label class="bf">Big headline<input class="bi wide" value="${esc(N.heroTitle)}" data-fcs="notes.heroTitle"></label>
+    <label class="bf">Line under it<textarea class="bi wide" rows="2" data-fcs="notes.heroLede">${esc(N.heroLede)}</textarea></label>
+    <h3 class="bsh">Your note card</h3><p class="bnote">One note per line. Put a <b>|</b> after the part you want in bold, like: <i>No delivery, | but Uber is fine.</i></p>
+    <label class="bf">Hello line<textarea class="bi wide" rows="2" data-fcs="notes.hello">${esc(N.hello)}</textarea></label>
+    ${N.groups.map((g,i)=>`<div class="bcq${g.on?'':' off'}"><div class="br"><input class="bi" value="${esc(g.t)}" data-fcs="notes.groups.${i}.t" aria-label="Section title"><select class="bsel" data-fcsel="notes.groups.${i}.ic" aria-label="Icon">${Object.entries(IC).map(([k,l])=>`<option value="${k}"${g.ic===k?' selected':''}>${l}</option>`).join('')}</select>${tgl(`notes.groups.${i}.on`,'Show '+g.t)}</div>
+      <textarea class="bi wide" rows="${Math.min(8,g.body.split('\n').length+1)}" data-fcs="notes.groups.${i}.body" aria-label="Notes for ${esc(g.t)}">${esc(g.body)}</textarea>
+      <div class="bcqa"><button type="button" class="lk" data-fcnmv="${i}:-1"${i?'':' disabled'}>Move up</button><button type="button" class="lk" data-fcnmv="${i}:1"${i<N.groups.length-1?'':' disabled'}>Move down</button><button type="button" class="lk del" data-fcndel="${i}">Remove</button></div></div>`).join('')}
+    <button type="button" class="btn soft wide" id="fcnadd">+ Add a section</button>
+    <label class="bf" style="margin-top:16px">Sign off<input class="bi wide" value="${esc(N.sign)}" data-fcs="notes.sign"></label>
+    <div class="note2">Prices, days and rush fees in your notes are plain text. If you change them under Rules, update the note too.</div>`}
   if(btab==='hist')body=`<h3 class="bsh">Published versions</h3><p class="bnote">Every time you publish, a copy is saved here. Restoring puts it back as a draft, so you can check it before it goes live.</p>
     <div class="hv cur"><div><b>Live now</b><small>${S.fch.length?'Published '+new Date(S.fch[0].at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'The starting form'}</small></div><span class="lockt">Live</span></div>
     ${S.fch.map((h,i)=>`<div class="hv"><div><b>${new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</b><small>${h.n} change${h.n>1?'s':''}: ${esc(h.sum.slice(0,3).join(', '))}${h.sum.length>3?', and more':''}</small></div>${i>0||true?`<button type="button" class="lk" data-fcrest="${i}">Restore the version before this</button>`:''}</div>`).join('')||'<p class="bnote">Nothing published yet. Your changes will show up here.</p>'}`;
@@ -1169,7 +1193,7 @@ const renderForm=()=>{const f=S.fc,v=$('v-form');
   <p class="mobhint">You're editing. Tap <b>Customer view</b> above to see the form the way customers will.</p>
   <div class="dbar" id="dbar" hidden></div>
   <div class="fbw ${fmode}">${fmode==='build'?`<section class="fb" id="fbld">${builderHTML()}</section>`:''}
-   <div class="pvf"><div class="pvbar"><a class="pvurl" href="/order" target="_blank" rel="noopener">${location.host}/order &#8599;</a><span class="pvst" id="pvlive"></span></div><div class="fpv" id="fpv"></div></div></div>`;
+   <div class="pvf"><div class="pvbar"><a class="pvurl" href="/order" target="_blank" rel="noopener">Open the live form &#8599;</a><span class="pvst" id="pvlive"></span></div><div class="fpv" id="fpv"></div></div></div>`;
   renderPreview()};
 const draft=()=>{const f=$('oform');if(!f)return null;const fd=new FormData(f),g=k=>String(fd.get(k)||'').trim(),size=g('size')||'classic',s=SIZES[size],cake=size!=='taste';
   const extra=S.fc.custom.filter(c=>c.on&&c.l.trim()).map(c=>[c.l,(c.t==='checks'?fd.getAll('cq_'+c.id):[g('cq_'+c.id)]).filter(Boolean).join(', ')]).filter(x=>x[1]);
@@ -1307,6 +1331,9 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(t.id==='fpuby'){const prev=JSON.parse(JSON.stringify(S.fc)),{L}=fdiff(S.fc,S.fcd);S.fc={...S.fcd,live:S.fc.live};S.fcd=null;S.fch.unshift({at:new Date().toISOString(),n:L.length,sum:L,prev});S.fch=S.fch.slice(0,10);save();closePop();render();
     toast(`${L.length} change${L.length>1?'s':''} published. New orders use them from now on.`,()=>{S.fc=prev;S.fch.shift();save();render()});return}
   if(t.dataset.fcrest){const h=S.fch[+t.dataset.fcrest];S.fcd=JSON.parse(JSON.stringify(h.prev));clean();save();btab='q';render();toast(S.fcd?'Old version loaded as a draft. Review it, then publish.':'That version matches what is live now.');return}
+  if(t.id==='fcnadd'){FD().notes.groups.push({id:'g'+Date.now(),ic:'mail',t:'New section',on:true,body:'Bold part | the rest of the note'});clean();save();render();toast('Section added to your draft.');return}
+  if(t.dataset.fcnmv){const[i,d]=t.dataset.fcnmv.split(':').map(Number),L=FD().notes.groups,j=i+d;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];clean();save();render();return}
+  if(t.dataset.fcndel){const L=FD().notes.groups,prev=L.slice();L.splice(+t.dataset.fcndel,1);clean();save();render();toast('Section removed from your draft.',()=>{FD().notes.groups=prev;clean();save();render()});return}
   if(t.id==='flink'){const ok=await copy(location.origin+'/order');toast(ok?'Form link copied. Put it in your Instagram bio.':'Your link: '+location.origin+'/order');return}
   if(t.dataset.fm){fm=t.dataset.fm;fw=null;fAnim=true;render();if(fm!==TODAY.slice(0,7)){const NW=innerWidth<640?8:16,w0=add(mon(TODAY),-(NW-3)*7);for(let i=0;i<NW;i++){const s=add(w0,7*i);if(s.slice(0,7)===fm){fw=i;break}}render()}return}
   if(t.dataset.goal){const was=mStat(fm).all>=S.goal;S.goal=Math.max(250,S.goal+ +t.dataset.goal);save();render();if(!was&&mStat(fm).all>=S.goal)sprinkle(document.querySelector('.gring'),40);return}
