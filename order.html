@@ -111,7 +111,7 @@ h1,h2,h3{margin:0;font-weight:400}
 .chip{border:0;background:var(--rail);border-radius:999px;padding:9px 16px;min-height:44px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:background .22s,color .22s,transform .2s var(--ez)}
 .chip small{font-weight:500;font-size:13px;color:var(--soft)}
 .chip[aria-pressed=true]{background:var(--acc);color:#fff}.chip[aria-pressed=true] small{color:#f6cdd6}
-.chip:active{transform:scale(.95)}
+.chip:active{transform:scale(.95)}.chip:disabled{opacity:.5;cursor:not-allowed}.chip:disabled:active{transform:none}
 .sw{width:20px;height:20px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(90,22,34,.18)}
 .chip[aria-pressed=true] .sw{box-shadow:0 0 0 2px #fff}
 .serv{display:block;font-style:normal;font-size:12.5px;line-height:1.35;color:var(--soft);margin-top:4px}.card[aria-pressed=true] .serv{color:rgba(255,255,255,.72)}.fine{font-size:13px;line-height:1.45;color:var(--soft);margin:10px 0 0}
@@ -351,7 +351,7 @@ const preview=(big)=>{const c1=SW[O.colors[0]]||'#f8efe6',c2=SW[O.colors[1]]||(O
   let body;
   if(isCup()){const cs=[[70,110],[120,110],[170,110],[95,70],[145,70]];body=cs.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="28" fill="#e9d3c0"/><circle cx="${x}" cy="${y}" r="22" fill="${[c1,c2,c3][i%3]}" stroke="rgba(90,22,34,.12)"/><circle cx="${x}" cy="${y}" r="9" fill="${[c2,c3,c1][i%3]}" opacity=".9"/>`).join('');}
   else if(isTaste()){body=[[60,70],[180,70],[60,140],[180,140]].map(([x,y],i)=>`<rect x="${x-46}" y="${y-30}" width="92" height="60" rx="12" fill="${['#f4e6cc','#6a3f28','#f2df95','#f2a1b4'][i]}"/>`).join('')+`<rect x="8" y="34" width="224" height="140" rx="18" fill="none" stroke="#5a1622" stroke-width="2"/>`;}
-  else{const heart=O.shape==='Heart'&&(O.size==='mini'||O.size==='classic'),sheet=O.size==='sheet',tier=O.size==='tier';
+  else{const heart=O.shape==='Heart'&&['mini','classic','tier','baby'].includes(O.size),sheet=O.size==='sheet',tier=O.size==='tier';
     const shape=heart?`<path d="M120 170C62 128 40 104 40 76c0-22 17-38 38-38 18 0 32 10 42 26 10-16 24-26 42-26 21 0 38 16 38 38 0 28-22 52-80 94z" fill="${c1}" stroke="${c2}" stroke-width="7" stroke-dasharray="1 10" stroke-linecap="round"/>`
       :sheet?`<rect x="22" y="40" width="196" height="120" rx="16" fill="${c1}" stroke="${c2}" stroke-width="7" stroke-dasharray="1 10" stroke-linecap="round"/>`
       :`<ellipse cx="120" cy="96" rx="${tier?88:84}" ry="${tier?72:68}" fill="${c1}" stroke="${c2}" stroke-width="8" stroke-dasharray="1 11" stroke-linecap="round"/>${tier?`<ellipse cx="120" cy="96" rx="52" ry="42" fill="${c1}" stroke="${c3}" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>`:''}`;
@@ -368,8 +368,8 @@ const P=(v)=>F.showPrices?v:'';
 const V={
 cake:()=>`
   <div class="cards" id="q-size">${Object.entries(SIZES).filter(([k])=>F.sizes[k]&&F.sizes[k].on).map(([k,s])=>`<button type="button" class="card sz" aria-pressed="${O.size===k}" data-size="${k}">${ICON(k)}<b>${esc(s.n)}</b><span>${F.showPrices?money(F.sizes[k].p)+(s.doz?' a dozen':''):(s.doz?'By the dozen':'&nbsp;')}</span>${SERV[k]?`<em class="serv">${SERV[k]}</em>`:''}</button>`).join('')}</div>${er('size')}
-  ${O.size&&sz().doz?`<div class="q">${lab('How many dozen?')}<div class="qty"><button type="button" data-qty="-1" aria-label="One less dozen">&minus;</button><b>${O.qty} dozen</b><button type="button" data-qty="1" aria-label="One more dozen">+</button></div></div>`:''}
-  ${['mini','classic','tier','baby'].includes(O.size)&&F.q.shape.on?`<div class="q">${lab(esc(F.q.shape.l))}<div class="chips">${['Round','Heart'].map(x=>opt(O.shape===x,`data-shape="${x}"`,x)).join('')}</div></div>`:''}
+  ${O.size&&sz().doz?`<div class="q">${lab('How many dozen?',0,`<small>Cupcakes are sold by the dozen</small>`)}<div class="qty"><button type="button" data-qty="-1" aria-label="One less dozen">&minus;</button><b>${O.qty} dozen<small style="font-weight:500;color:var(--soft);margin-left:6px">${O.qty*12} cupcakes</small></b><button type="button" data-qty="1" aria-label="One more dozen">+</button></div></div>`:''}
+  ${O.size&&!sz().doz&&!isTaste()&&F.q.shape.on?`<div class="q">${lab(esc(F.q.shape.l))}<div class="chips">${[['Round',O.size==='sheet'?'Not for sheet cakes':''],['Heart',O.size==='twelve'?'Not for the 12" cake':O.size==='sheet'?'Not for sheet cakes':''],['Sheet',O.size==='sheet'?'':'Pick the sheet cake size']].map(([x,why])=>{const on=(O.size==='sheet'?'Sheet':O.shape)===x;return `<button type="button" class="chip" aria-pressed="${on}" ${why?'disabled aria-disabled="true"':`data-shape="${x}"`}>${x==='Sheet'?'Sheet cake':x}${why?`<small>${why}</small>`:''}</button>`}).join('')}</div></div>`:''}
   ${isTaste()?`<div class="note soft">The tasting box is 4 flavor combos. Write the 4 you want in the description on the next step.</div>`:''}
   ${O.size==='baby'?`<div class="note soft">Baby cakes are one buttercream color with no add-ons.</div>`:''}
   ${O.size==='tier'&&F.tierRule?`<div class="note warn">Tiered cakes need at least <b>${F.tierDays} days</b> of notice.</div>`:''}`,
@@ -413,7 +413,7 @@ review:()=>{const s=sz(),L=lines(),T=total(),dep=F.deposit<100?Math.round(T*F.de
   const row=(k,v)=>v?`<div class="rvr"><span>${k}</span><b>${v}</b></div>`:'';
   const sec=(t,i,body)=>`<div class="rv"><div class="rvh"><h3>${t}</h3><button type="button" data-go="${i}">Edit</button></div>${body}</div>`;
   return `
-  ${sec('Your cake',0,row('Size',esc(s.n)+(s.doz?`, ${O.qty} dozen`:''))+row('Shape',(O.size==='mini'||O.size==='classic')?O.shape:''))}
+  ${sec('Your cake',0,row('Size',esc(s.n)+(s.doz?`, ${O.qty} dozen`:''))+row('Shape',s.doz||isTaste()?'':O.size==='sheet'?'Sheet cake':O.shape))}
   ${isTaste()?'':sec('Flavor and look',1,row('Flavor',esc(O.flavor))+row('Filling',esc(O.filling)||'None')+row('Buttercream',esc(O.frosting))+row('Colors',[...O.colors,O.colOther.trim()].filter(Boolean).map(esc).join(', ')))}
   ${sec('Details',2,row('Writing',O.text?`<span class="writing" style="font-size:22px">${esc(O.text)}</span>`:'')+row('Extras',O.addons.map(esc).join(', '))+row('For',esc(O.forWho))+row('Allergies',esc(O.allergies))+row('Found me via',esc(O.heard))+row('Photos',photos.length?photos.length+' added':'')+(O.notes?`<div class="rvr" style="display:block"><span>Your idea</span><p style="margin:4px 0 0">${esc(O.notes)}</p></div>`:''))}
   ${sec('Pickup',3,row('Day',O.pickup?wds(O.pickup):'')+row('Picked up by',{me:'You',uber:'An Uber driver',other:esc(O.pkname)||'Someone else'}[O.pk]))}
@@ -597,7 +597,7 @@ const jump=k=>{const el=$('s-'+k);if(!el)return;const top=el.getBoundingClientRe
 const send=()=>{const s=sz(),id='w'+Date.now(),T=total();
   const fx={sz:Object.fromEntries(Object.entries(F.sizes).map(([k,v])=>[k,+v.p])),up:Object.fromEntries(F.flav.map(x=>[x.n,+x.up||0])),add:Object.fromEntries(F.adds.map(x=>[x.n,+x.p||0])),fill:+F.fillFee,incl:+F.incl,col:+F.colFee,rush:F.rushOn?+F.rush:0,lead:+F.lead};
   const extra=F.custom.filter(c=>c.on&&c.l.trim()).map(c=>[c.l,[].concat(O.cq[c.id]||[]).join(', ')]).filter(x=>x[1]);
-  const o={id,time:'',name:O.name.trim(),email:O.email.trim(),phone:O.phone.trim(),ig:O.ig.trim(),pickup:O.pickup,size:O.size,qty:s.doz?O.qty:1,shape:s.k==='cake'?(O.size==='sheet'?'Sheet':(O.size==='mini'||O.size==='classic')?O.shape:'Round'):'',
+  const o={id,time:'',name:O.name.trim(),email:O.email.trim(),phone:O.phone.trim(),ig:O.ig.trim(),pickup:O.pickup,size:O.size,qty:s.doz?O.qty:1,shape:s.k==='cake'?(O.size==='sheet'?'Sheet':O.size==='twelve'?'Round':O.shape):'',
     flavor:isTaste()?'':O.flavor,filling:isTaste()||isCup()?'':O.filling,frosting:isTaste()?'':O.frosting,colors:isTaste()?[]:[...O.colors,...(O.colOther.trim()?[O.colOther.trim()]:[])],text:O.text.trim(),addons:O.addons,placed:TODAY,status:'new',invoicedOn:'',
     picker:{type:O.pk,name:O.pkname,phone:O.pkphone},forWho:O.forWho.trim()||'Not given',allergies:O.allergies.trim()||'None',notes:[O.notes.trim(),O.heard.trim()?'Heard about me: '+O.heard.trim():''].filter(Boolean).join('\n'),photo:photos.length>0,hon:'',bday:false,extra,fx,via:'web'};
   if(PREV){$('nav').hidden=true;$('bar').hidden=true;$('hero').hidden=true;$('app').innerHTML='<div class="done"><h1>Test order looks good</h1><p class="lede">This is just the preview, so nothing was sent.</p><button type="button" class="btn soft" id="again">Back to the form</button></div>';return}
@@ -621,7 +621,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   if(d.go!=null){jump(STEPS[+d.go][0]);return}
   if(t.id==='again'){$('nav').hidden=false;$('bar').hidden=false;$('hero').hidden=false;calM=null;renderAll();scrollTo(0,0);return}
   let ch=null;
-  if(d.size){const was=isTaste();O.size=d.size;if(O.size==='baby'){O.addons=[];O.colors=O.colors.slice(0,1);O.colOther=''}if(O.size==='twelve'&&O.shape==='Heart')O.shape='Round';if(!SIZES[O.size].doz)O.qty=1;if(O.pickup&&dayInfo(O.pickup).k!=='ok')O.pickup='';ch=was!==isTaste()?'all':['cake','look','extras','pickup','review']}
+  if(d.size){const was=isTaste();O.size=d.size;if(O.size==='baby'){O.addons=[];O.colors=O.colors.slice(0,1);O.colOther=''}if(O.size==='twelve'&&O.shape==='Heart')O.shape='Round';if(O.size!=='sheet'&&O.shape==='Sheet')O.shape='Round';if(!SIZES[O.size].doz)O.qty=1;if(O.pickup&&dayInfo(O.pickup).k!=='ok')O.pickup='';ch=was!==isTaste()?'all':['cake','look','extras','pickup','review']}
   if(d.qty){O.qty=Math.min(12,Math.max(1,O.qty+ +d.qty));ch=['cake','review']}
   if(d.shape){O.shape=d.shape;ch=['cake','review']}
   if(d.flavor){O.flavor=d.flavor;ch=['look','review']}
