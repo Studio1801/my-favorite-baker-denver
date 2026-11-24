@@ -481,6 +481,19 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 .safe{margin-top:12px;background:#eef6f1;border-radius:16px;padding:12px 16px;font-size:14px;color:#24513a}.safe b{display:block;color:#1f6b45;margin-bottom:2px}
 .ack{display:flex;align-items:flex-start;gap:10px;margin-top:14px;font-size:14px;cursor:pointer}.ack input{width:18px;height:18px;margin-top:1px;accent-color:var(--ink);flex:none}
 .btn:disabled{opacity:.4;cursor:not-allowed}
+.s-review{--sc:var(--c-new)}.s-wait{--sc:#7a5ab0}
+.rvn{flex-basis:100%;margin:0 0 4px;font-size:14.5px;color:var(--soft)}.rvn.hot{color:var(--cherry);font-weight:600}
+.thr{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px}
+.thr li{position:relative;border-radius:16px;padding:10px 14px 10px;background:var(--rail)}.thr li.out{background:#fff;box-shadow:inset 0 0 0 1px var(--line);margin-left:22px}.thr li.in{margin-right:22px}
+.thr summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:baseline;padding-right:70px}.thr summary::-webkit-details-marker{display:none}
+.thr summary b{font-size:14px}.thr .msj{font-size:13.5px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.thr summary em{grid-column:1/-1;font-style:normal;font-size:12px;color:var(--mute)}
+.thr p{margin:8px 0 2px;font-size:14px;line-height:1.5}
+.mst{position:absolute;top:10px;right:12px;font-size:11.5px;font-weight:700;color:var(--c-paid)}.mst.st-replied{color:#7a5ab0}.mst.st-failed{color:var(--cherry)}.mst.st-sending{color:var(--soft)}.thr li.in .mst{color:var(--cherry)}
+.mcbox{border-radius:18px;background:var(--rail);padding:12px;display:grid;gap:8px;animation:up .35s cubic-bezier(.22,1,.36,1)}
+.mchips{display:flex;flex-wrap:wrap;gap:6px}.mchip{border:0;border-radius:999px;padding:7px 12px;background:#fff;font-weight:600;font-size:13px;color:var(--ink);min-height:36px}.mchip[aria-pressed=true]{background:var(--ink);color:#fff}
+.mrow{display:grid;grid-template-columns:60px 1fr;align-items:center;gap:8px;font-size:13px;color:var(--soft)}.mrow input,#mc-body{width:100%;border:0;border-radius:12px;background:#fff;padding:9px 11px;font:inherit;font-size:14px;color:var(--ink)}
+#mc-body{resize:vertical;line-height:1.5;min-height:200px}.mcact{display:flex;gap:8px;flex-wrap:wrap}
+#mailh small{font:600 12px var(--sans,inherit);color:var(--soft);margin-left:4px}
 .mlog{list-style:none;margin:0;padding:0}.mlog li{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px}
 .mlog i{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1.5px var(--mute)}.mlog i.ok{background:var(--c-paid);box-shadow:none}
 .mlog span{flex:1}.mlog em{font-style:normal;color:var(--soft);font-size:13px;white-space:nowrap}.mlog li.sch{color:var(--soft)}
@@ -696,7 +709,7 @@ const lines=o=>{const X=o.fx,s=SIZES[o.size],sp=X&&X.sz[o.size]!=null?X.sz[o.siz
 const total=o=>lines(o).reduce((t,l)=>t+l[1],0);
 const htotal=h=>HMENU.reduce((t,m)=>t+m.p*(h.q[m.k]||0),0);
 const ST={new:'New order',invoiced:'Pending payment',paid:'Paid, baking',done:'Picked up'};
-const SH={new:'Send the invoice',invoiced:'Waiting on payment',paid:'Ready to bake',done:'All done'};
+const SH={new:'Review, then invoice',invoiced:'Waiting on payment',paid:'Ready to bake',done:'All done'};
 const ORD=['new','invoiced','paid','done'],CV={new:'var(--c-new)',invoiced:'var(--c-inv)',paid:'var(--c-paid)',done:'var(--c-done)'};
 const trk=st=>`<span class="trk" aria-hidden="true">${ORD.map((k,i)=>`<i class="${i<=ORD.indexOf(st)?'on':''}"></i>`).join('')}</span>`;
 const who=o=>o.picker.type==='uber'?'Uber pickup':o.picker.type==='other'&&o.picker.name?esc(o.picker.name.split(' ')[0])+' picks up':'';
@@ -706,7 +719,7 @@ const KEY='mfb-book-v2';
 const fresh=()=>({orders:JSON.parse(JSON.stringify(SEED)),hol:JSON.parse(JSON.stringify(HSEED)),closed:[],cap:3,red:{},sent:[]});
 let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!Array.isArray(S.orders)||!Array.isArray(S.hol))S=fresh();
-S.chk=S.chk||{};S.capd=S.capd||{};S.extra=S.extra||[];S.hrs=S.hrs||{};S.note=S.note||{};S.msgd=S.msgd||{};
+S.chk=S.chk||{};if(!S.mailSeed){S.mailSeed=1;const nw=S.orders.filter(o=>o.status==='new');if(nw[0]){const o=nw[0],d0=new Date(Date.now()-26*3600e3).toISOString(),d1=new Date(Date.now()-20*3600e3).toISOString();o.mail=[{id:'ms1',at:d0,dir:'out',k:'ask',subj:'Quick question about your cake order',body:`Hi ${String(o.name).split(' ')[0]},\n\nThank you for your order! Quick question before I confirm: did you want the writing in white or in a darker color so it pops?\n\nThank you!\nCarlie`,st:'Replied'},{id:'ms2',at:d1,dir:'in',subj:'Re: Quick question about your cake order',body:'Hi Carlie! A darker color please, like a deep red. Thank you so much!',st:'New'}];o.rv='replied'}S.orders.filter(o=>o.status!=='new').forEach(o=>{o.rv='ok'})}S.capd=S.capd||{};S.extra=S.extra||[];S.hrs=S.hrs||{};S.note=S.note||{};S.msgd=S.msgd||{};
 const FC0=()=>({live:true,title:'Cake order form',intro:'Pickup only in Thornton. You can book an Uber driver to grab it.\nOrder at least 7 days ahead, or a $50 rush fee applies. Book up to 2 months out.\nCarlie emails your invoice. Pay within 2 days to hold your date.',
   thanks:'Thank you! Your order is in. Carlie will email your invoice within a day.',accent:'#5a1622',showPrices:true,showTotal:true,
   lead:7,rushOn:true,rush:50,win:60,pay:2,deposit:100,days:[2,3,4,5],tierRule:true,tierDays:14,needIdea:false,rushWarn:true,
@@ -768,10 +781,12 @@ const renderWeek=()=>{const days=zd?[zd]:[0,1,2,3].map(i=>add(WEEKS[wk],i)),wo=S
 const shortO=o=>{const s=SIZES[o.size];return o.size==='taste'?'Tasting box':s.doz?`${o.qty} doz ${s.n.toLowerCase()}`:s.n+(o.shape==='Heart'?' heart':'')};
 const renderNeeds=()=>{const N=[],tmr=add(TODAY,1),d3=d=>wd(d).slice(0,3);
   S.orders.forEach(o=>{const f=esc(first(o)),sh=esc(shortO(o));
-    if(o.status==='new')N.push({g:'new',o,u:o.pickup,n:f,d:`${sh}, ${d3(o.pickup)}, ${money(total(o))}`,b:['send','Send invoice']});
+    if(o.status==='new'&&o.rv==='asked')N.push({g:'wait',o,u:o.pickup,n:f,d:`Asked a question, ${d3(o.pickup)} pickup`,b:['rev','Open']});
+    else if(o.status==='new'&&o.rv!=='ok')N.push({g:'review',o,u:o.pickup,n:f,tag:o.rv==='replied'?'Replied':'',d:`${sh}, ${d3(o.pickup)}, ${money(total(o))}`,b:['rev',o.rv==='replied'?'Read reply':'Review']});
+    else if(o.status==='new')N.push({g:'new',o,u:o.pickup,n:f,d:`${sh}, ${d3(o.pickup)}, ${money(total(o))}`,b:['send','Send invoice']});
     else if(o.status==='invoiced'){const due=add(o.invoicedOn,2);if(due<=tmr)N.push({g:'invoiced',o,u:due,n:f,hot:due<=TODAY,d:`${due<TODAY?'Late':due===TODAY?'Due today':'Due tomorrow'}, ${money(total(o))}${o.remindedOn?', reminded':''}`,b:['paid','Mark as paid'],b2:S.auto.rem||o.remindedOn===TODAY?null:['remind','Remind']})}
     else if(o.status==='paid'&&o.pickup===tmr&&!o.time&&!o.ptSent)N.push({g:'paid',o,u:o.pickup,n:f,d:`Pickup tomorrow, no time yet${o.picker.type==='uber'?'. Uber driver coming':''}`,b:['psend','Ask for a time']})});
-  const L=zd?N.filter(n=>n.o.pickup===zd):N,GR=[['new','Send invoice'],['invoiced','Chase payment'],['paid','Ask for a pickup time']];
+  const L=zd?N.filter(n=>n.o.pickup===zd):N,GR=[['review','Review and confirm'],['wait','Waiting on their reply'],['new','Send invoice'],['invoiced','Chase payment'],['paid','Ask for a pickup time']];
   const hu=S.hol.filter(h=>!h.paid).length,rm=reminders().length;
   const extra=zd?'':[hu?`<button type="button" class="nx" data-go="holiday">${hu} holiday orders unpaid &#8250;</button>`:'',rm?`<button type="button" class="nx" data-go="customers">${rm} birthday texts to send &#8250;</button>`:''].join('');
   $('needs').innerHTML=`<h2>Needs you<small>${L.length?L.length+' orders':''}</small></h2>`+(L.length?GR.map(([g,lab])=>{const r=L.filter(n=>n.g===g).sort((a,b)=>a.u<b.u?-1:1);
@@ -781,7 +796,7 @@ const renderNeeds=()=>{const N=[],tmr=add(TODAY,1),d3=d=>wd(d).slice(0,3);
 
 const TIMES=[...Array(23)].map((_,i)=>{const m=480+i*15;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')});
 const tick=o=>{const pk=o.picker.type,al=o.allergies&&o.allergies!=='None';
-  const act={new:`<button type="button" class="qa" data-qa="send:${o.id}">Send invoice</button>`,invoiced:`<button type="button" class="qa" data-qa="paid:${o.id}">Mark as paid</button>${o.remindedOn===TODAY?'<span class="donel">Reminded today</span>':`<button type="button" class="qa ghost" data-qa="remind:${o.id}">Send reminder</button>`}`,
+  const act={new:o.rv!=='ok'?`<button type="button" class="qa" data-qa="rev:${o.id}">${o.rv==='replied'?'Read reply':o.rv==='asked'?'Waiting':'Review'}</button>`:`<button type="button" class="qa" data-qa="send:${o.id}">Send invoice</button>`,invoiced:`<button type="button" class="qa" data-qa="paid:${o.id}">Mark as paid</button>${o.remindedOn===TODAY?'<span class="donel">Reminded today</span>':`<button type="button" class="qa ghost" data-qa="remind:${o.id}">Send reminder</button>`}`,
     paid:o.time?`<button type="button" class="qa" data-qa="psend:${o.id}">${o.ptSent?'Text again':'Send pickup text'}</button><button type="button" class="qa ghost" data-qa="done:${o.id}">Picked up</button>`:'',done:'<span class="donel">Complete</span>'}[o.status];
   const tc=o.time?`<b>${t12(o.time)}</b>`:o.status==='paid'?`<label class="tset"><span>Set a time</span><select data-tset="${o.id}" aria-label="Pickup time for ${esc(first(o))}"><option value="">Choose</option>${TIMES.filter(t=>t>=hrsOf(o.pickup)[0]&&t<=hrsOf(o.pickup)[1]).map(t=>`<option value="${t}">${t12(t)}</option>`).join('')}</select></label>`:'<b style="color:var(--mute)">No time</b>';
   const pw=pk==='uber'?'Uber driver picks up':pk==='other'&&o.picker.name?esc(o.picker.name.split(' ')[0])+' picks up':'Customer picks up';
@@ -1215,14 +1230,50 @@ const upd0=()=>{const o=draft();if(!o)return;const f=S.fc,s=SIZES[o.size];$('f-q
 /* ---------- Drawer ---------- */
 const kv=(k,v,cls)=>v?`<div class="kv"><span>${k}</span><span class="${cls||''}">${v}</span></div>`:'';
 const sketch='<svg width="96" height="72" viewBox="0 0 96 72" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M22 60h52M28 60V42h40v18M36 42V30h24v12"/><path d="M28 48c3 3 6 3 9 0s6-3 9 0 6 3 9 0 6-3 9 0 4 2 4 2M36 35c2 2 4 2 6 0s4-2 6 0 4 2 6 0 4-2 6 0"/><path d="M44 24c0-3 4-3 4 0 0-3 4-3 4 0 0 3-4 5-4 5s-4-2-4-5z"/></svg>';
+/* ---------- email with customers (demo: nothing leaves the browser until MAIL_LIVE is true) ---------- */
+const MAIL_LIVE=false;
+const nowS=()=>new Date().toISOString();
+const atS=s=>{const d=new Date(s);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};
+const subjOf=o=>`Your custom cake order for ${wds(o.pickup)} - My Favorite Baker`;
+const specs=o=>{const s=SIZES[o.size];return ['Here is what I have:',`- ${s.n}${s.doz?`, ${o.qty} dozen`:''}${o.shape&&!s.doz&&o.size!=='taste'?`, ${o.shape.toLowerCase()}`:''}`,o.flavor&&`- ${o.flavor} cake${o.filling?` with ${o.filling.toLowerCase()} filling`:''}`,o.frosting&&`- ${o.frosting} buttercream${o.colors.length?` in ${o.colors.join(', ')}`:''}`,o.text&&`- Writing: "${o.text}"`,o.addons.length&&`- Add-ons: ${o.addons.join(', ')}`,`- Total: ${money(total(o))}`].filter(Boolean).join('\n')};
+const TPL={
+  confirm:['Confirm order',o=>`Hi ${first(o)},\n\nThank you so much for your order! I looked everything over and it all works.\n\n${specs(o)}\n\nPickup is ${wds(o.pickup)} in Thornton, between 8am and 1:30pm. I'll send the address and an exact time the day before.\n\nYour invoice with a payment link is coming next. Please pay within 2 days to hold your spot.\n\nThank you!\nCarlie`],
+  ask:['Question on the design',o=>`Hi ${first(o)},\n\nThank you for your order! Before I confirm it, I have a quick question about your design:\n\n${o.photo?'I saw your inspiration photo. ':''}\n\nAs soon as I hear back, I'll confirm and send your invoice.\n\nThank you!\nCarlie`],
+  change:['Suggest a change',o=>`Hi ${first(o)},\n\nThank you for your order! I want to make sure you love your cake, so one small change:\n\nI can't do  but I can do  instead.\n\nDoes that work for you? Once you say yes, I'll send your invoice.\n\nThank you!\nCarlie`],
+  pickup:['Pickup reminder',o=>`Hi ${first(o)},\n\nJust a reminder that your cake is ready ${wds(o.pickup)}${o.time?` at ${t12(o.time)}`:''} in Thornton. I'll send the address the day before.\n\nPlease have a flat spot in your car and the AC on. If you're running late, just message me.\n\nSee you soon!\nCarlie`]};
+let mc=null;
+const openMc=(o,k)=>{mc={id:o.id,k,subj:(k==='ask'||k==='change'?'Quick question about your cake order':subjOf(o)),body:TPL[k][1](o)};renderDrawer();setTimeout(()=>{const b=$('mc-body');if(!b)return;b.scrollIntoView({block:'center',behavior:RM()?'auto':'smooth'});b.focus();const i=b.value.indexOf('\n\n\n');if(k==='ask'||k==='change'){const p=k==='ask'?b.value.indexOf('design:\n\n')+9+(o.photo?32:0):b.value.indexOf("can't do ")+9;b.setSelectionRange(p,p)}},60)};
+const SIMR=o=>`Hi Carlie! Thanks for checking. ${o.colors.length?`Let's keep ${o.colors[0]} as the main color`:'Keep it simple and clean'}${o.text?`, and the writing can go across the middle`:''}. Whatever looks best to you, I trust you!\n\n${first(o)}`;
+const sendMail=async(o)=>{const m={id:'m'+Date.now(),at:nowS(),dir:'out',k:mc.k,subj:mc.subj.trim()||subjOf(o),body:mc.body.trim(),st:'Sending'};
+  if(!m.body){toast('Write a message first.');return}
+  o.mail=o.mail||[];o.mail.push(m);const k=mc.k;mc=null;
+  if(MAIL_LIVE){try{const r=await fetch('/api/send-order-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.id,to:o.email,subject:m.subj,text:m.body})});const j=await r.json();m.st=r.ok?'Delivered':'Failed';if(!r.ok)toast(j.error||'Email did not send.')}catch(e){m.st='Failed'}}else m.st='Delivered';
+  if(k==='confirm'&&o.status==='new'){o.rv='ok';logM(o,'Order confirmed by email');save();render();pulse(o.id);toast(`Confirmed. Email sent to ${o.email}.`);
+    if(S.auto.inv)setTimeout(()=>{if(o.status!=='new')return;logM(o,'Invoice emailed automatically');o.status='invoiced';o.invoicedOn=TODAY;save();render();toast(`Invoice emailed to ${first(o)}.`);
+      if(S.auto.pay)setTimeout(()=>{if(o.status!=='invoiced')return;logM(o,`Paid ${money(total(o))} through the payment link`);o.status='paid';save();render();toast(`${first(o)} paid ${money(total(o))}. Now Paid, baking.`)},3800)},1600);return}
+  if((k==='ask'||k==='change'||o.rv==='asked'||o.rv==='replied')&&o.status==='new'){o.rv='asked';save();render();toast(`Sent to ${o.email}. You'll see their reply here.`);
+    setTimeout(()=>{if(o.rv!=='asked')return;m.st='Replied';o.mail.push({id:'m'+Date.now(),at:nowS(),dir:'in',subj:'Re: '+m.subj,body:SIMR(o),st:'New'});o.rv='replied';save();render();toast(`${first(o)} replied. Open their order to read it.`)},6000);return}
+  save();render();toast(`Email sent to ${o.email}.`)};
+const mailHTML=o=>{const L=o.mail||[],F=esc(first(o));
+  const th=L.length?`<ol class="thr">${L.map(m=>`<li class="${m.dir}"><details${m===L[L.length-1]?' open':''}><summary><b>${m.dir==='in'?F:'You'}</b><span class="msj">${esc(m.subj)}</span><em>${atS(m.at)}</em></summary><p>${esc(m.body).replace(/\n/g,'<br>')}</p></details><span class="mst st-${m.st.toLowerCase()}">${m.dir==='in'?'Received':m.st}</span></li>`).join('')}</ol>`:`<p class="sub" style="margin:2px 0 10px">No emails with ${F} yet. Everything you send from here is saved on this order.</p>`;
+  const ks=o.status==='new'?['confirm','ask','change','pickup']:['pickup','ask'];
+  const comp=mc&&mc.id===o.id?`<div class="mcbox"><div class="mchips" role="group" aria-label="Templates">${ks.map(k=>`<button type="button" class="mchip" data-mt="${k}" aria-pressed="${mc.k===k}">${TPL[k][0]}</button>`).join('')}</div>
+    <label class="mrow"><span>To</span><input value="${esc(o.email)}" readonly></label><label class="mrow"><span>Subject</span><input id="mc-subj" value="${esc(mc.subj)}"></label>
+    <textarea id="mc-body" rows="11" aria-label="Message">${esc(mc.body)}</textarea>
+    <div class="mcact"><button type="button" class="btn" data-msend="1">${mc.k==='confirm'&&o.status==='new'?'Send and confirm':'Send email'}</button><button type="button" class="btn soft" data-mx="1">Cancel</button></div>${MAIL_LIVE?'':'<p class="hint">Demo mode. Emails are saved here but not actually sent yet.</p>'}</div>`
+    :`<button type="button" class="btn soft" data-mc="${o.status==='new'?'ask':'pickup'}" style="margin-top:4px">Write to ${F}</button>`;
+  return `<h4 id="mailh">Emails with ${F}${L.length?` <small>${L.length}</small>`:''}</h4>${th}${comp}`};
+const reviewActs=o=>{const F=esc(first(o));
+  const msg=o.rv==='replied'?`<p class="rvn hot">${F} replied. Read it below, then confirm or write back.</p>`:o.rv==='asked'?`<p class="rvn">Waiting on ${F}'s reply. You can still confirm any time.</p>`:`<p class="rvn">New request. Check the details below, then confirm it or ask ${F} a question first.</p>`;
+  return `${msg}<button type="button" class="btn" data-mc="confirm">Confirm order</button><button type="button" class="btn soft" data-mc="${o.rv==='replied'?'ask':'ask'}">${o.rv==='replied'?'Reply':o.rv==='asked'?'Send another message':'Ask a question'}</button>`};
 const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();return}
   const pk=o.picker.type,rush=gap(o.placed,o.pickup)<7,c=custOf(o),s=SIZES[o.size];
-  const acts={new:`<button type="button" class="btn" data-qa="send:${o.id}">Send invoice</button><button type="button" class="btn soft" data-act="invoice">Copy it instead</button><p class="hint">Emails ${esc(o.email)} the price and a payment link. Moves this to Pending payment.</p>`,
+  const acts={new:o.rv!=='ok'?reviewActs(o):`<button type="button" class="btn" data-qa="send:${o.id}">Send invoice</button><button type="button" class="btn soft" data-act="invoice">Copy it instead</button><p class="hint">Emails ${esc(o.email)} the price and a payment link. Moves this to Pending payment.</p>`,
     invoiced:`<button type="button" class="btn" data-qa="paid:${o.id}">Mark as paid</button><button type="button" class="btn soft" data-qa="remind:${o.id}">Send payment reminder</button><p class="hint">${S.auto.pay?'Moves to Paid, baking by itself when they pay through the link.':'Moves this to Paid, baking.'}</p>`,
     paid:`<button type="button" class="btn" data-qa="psend:${o.id}">Send pickup text</button><button type="button" class="btn soft" data-act="ptext">Copy it</button><button type="button" class="btn soft" data-qa="done:${o.id}">Customer picked up</button>`,done:'<p class="sub">Picked up. This order is complete.</p>'};
   const lg=(o.log&&o.log.length?o.log:[o.invoicedOn&&{d:o.invoicedOn,m:'Invoice emailed'},(o.status==='paid'||o.status==='done')&&o.invoicedOn&&{d:add(o.invoicedOn,1),m:'Paid through the payment link'}].filter(Boolean));
   const sch=[o.status==='invoiced'&&S.auto.rem&&!o.remindedOn&&`Payment reminder, ${md(add(o.invoicedOn,1)>TODAY?add(o.invoicedOn,1):add(TODAY,1))}`,(o.status==='paid'||o.status==='invoiced')&&S.auto.pick&&o.pickup>add(TODAY,1)&&!o.ptSent&&`Pickup reminder, ${md(add(o.pickup,-1))} at 9am`,o.status!=='done'&&S.auto.thx&&`Thank you note, after pickup`].filter(Boolean);
-  const msgs=lg.length||sch.length?`<h4>Messages</h4><ul class="mlog">${lg.map(x=>`<li><i class="ok"></i><span>${esc(x.m)}</span><em>${md(x.d)}</em></li>`).join('')}${sch.map(x=>`<li class="sch"><i></i><span>${esc(x.split(',')[0])}</span><em>${esc(x.split(', ').slice(1).join(', ')||'auto')}</em></li>`).join('')}</ul>`:'';
+  const msgs=lg.length||sch.length?`<h4>Automatic updates</h4><ul class="mlog">${lg.map(x=>`<li><i class="ok"></i><span>${esc(x.m)}</span><em>${md(x.d)}</em></li>`).join('')}${sch.map(x=>`<li class="sch"><i></i><span>${esc(x.split(',')[0])}</span><em>${esc(x.split(', ').slice(1).join(', ')||'auto')}</em></li>`).join('')}</ul>`:'';
   const big=`<div class="big s-${o.status}">${ORD.map((k,i)=>`<div class="${i<=ORD.indexOf(o.status)?'on':''}${k===o.status?' cur':''}" style="--c-x:${CV[o.status]}"><i></i>${ST[k]}</div>`).join('')}</div>`;
   $('drawer').innerHTML=`<div class="dtop"><div><h2>${esc(o.name)}</h2><p class="sub">For ${esc(o.forWho)}. Ordered ${md(o.placed)}${rush?', <span class="hot2">rush order</span>':''}</p>${c?`<p class="sub" style="margin-top:2px">${ord(c.orders.length)} order with you, ${c.pts} reward points</p>`:''}</div><button type="button" class="x" id="x" aria-label="Close">&times;</button></div>
   ${big}
@@ -1236,15 +1287,15 @@ const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();
   ${kv('Buttercream',o.frosting?esc(o.frosting)+(o.colors.length?' &nbsp;'+o.colors.map(c=>`<i class="sw" style="background:${SW[c]||'#ccc'}" title="${esc(c)}"></i>`).join(''):''):'')}${kv('Colors',esc(o.colors.join(', ')))}
   ${o.text?`<div class="kv"><span>Writing</span><span class="wr">${esc(o.text)}</span></div>`:''}${kv('Add-ons',esc(o.addons.join(', ')))}${kv('Allergies',esc(o.allergies),o.allergies&&o.allergies!=='None'?'hot2':'')}
   ${(o.extra||[]).map(([k,v])=>kv(esc(k),esc(v))).join('')}${o.ig?kv('Instagram',esc(o.ig)):''}${o.notes?`<div class="kv" style="display:block"><span>Their notes</span><p style="margin:4px 0 0">${esc(o.notes)}</p></div>`:''}${o.photo?`<div class="insp">${sketch}<span>Inspiration photo from the form</span></div>`:''}
-  ${msgs}<h4>Price</h4><table class="price">${lines(o).map(l=>`<tr><td>${esc(l[0])}</td><td>$${l[1]}</td></tr>`).join('')}<tr class="tt"><td>Total</td><td>$${total(o)}</td></tr></table>
+  ${mailHTML(o)}${msgs}<h4>Price</h4><table class="price">${lines(o).map(l=>`<tr><td>${esc(l[0])}</td><td>$${l[1]}</td></tr>`).join('')}<tr class="tt"><td>Total</td><td>$${total(o)}</td></tr></table>
   <h4>Contact</h4>${kv('Phone',esc(o.phone))}${kv('Email',esc(o.email))}${o.status!=='new'?'<button type="button" class="back" data-act="back">Move back a step</button>':''}`};
 const openD=id=>{const was=!!openId&&$('drawer').classList.contains('on');openId=id;renderDrawer();$('drawer').scrollTop=0;$('drawer').classList.add('on');$('drawer').setAttribute('aria-hidden','false');$('scrim').classList.add('on');$('x')?.focus({preventScroll:true});
   if(!RM()&&!was)[...$('drawer').children].slice(0,8).forEach((c,i)=>c.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:420,delay:120+i*35,easing:EZ,fill:'backwards'}))};
-const closeD=()=>{openId=null;$('drawer').classList.remove('on');$('drawer').setAttribute('aria-hidden','true');$('scrim').classList.remove('on')};
+const closeD=()=>{mc=null;openId=null;$('drawer').classList.remove('on');$('drawer').setAttribute('aria-hidden','true');$('scrim').classList.remove('on')};
 
 
 let popD=null;
-const AU=[['inv','Send the invoice right away','As soon as an order comes in, email the price breakdown with a payment link.'],['pay','Mark orders paid by themselves','When they pay through the link, the order moves to Paid, baking.'],['rem','Payment reminder after 1 day','A friendly nudge if the invoice is still unpaid.'],['pick','Pickup reminder the day before','A text at 9am with the time and the address.'],['thx','Thank you after pickup','A short note with a link to leave a Google review.']];
+const AU=[['inv','Send the invoice when you confirm','As soon as you confirm an order, email the price breakdown with a payment link.'],['pay','Mark orders paid by themselves','When they pay through the link, the order moves to Paid, baking.'],['rem','Payment reminder after 1 day','A friendly nudge if the invoice is still unpaid.'],['pick','Pickup reminder the day before','A text at 9am with the time and the address.'],['thx','Thank you after pickup','A short note with a link to leave a Google review.']];
 const renderAuto=()=>{const n=AU.filter(a=>S.auto[a[0]]).length;$('pop').innerHTML=`<div class="ptop"><div><p class="pk2">Runs for you</p><h2 id="ptitle">Automatic messages</h2><p class="pst pst-open">${n} of ${AU.length} on</p></div><button type="button" class="x" id="pclose" aria-label="Close">&times;</button></div>
   <div class="pg2">${AU.map(([k,t,d])=>`<div class="prow"><div><b>${t}</b><small>${d}</small></div><button type="button" class="tg" role="switch" aria-checked="${!!S.auto[k]}" aria-label="${t}" data-au="${k}"></button></div>`).join('')}</div>
   <p class="hint" style="margin-top:14px">Every message still shows on the order, so you can always see what went out.</p>`};
@@ -1303,7 +1354,7 @@ const pickupText=o=>`Hi ${first(o)}! Your order is ready for pickup ${o.pickup==
 const logM=(o,m)=>{o.log=o.log&&o.log.length?o.log:[];o.log.push({d:TODAY,m})};
 const setSt=(o,st,msg)=>{const prev={status:o.status,invoicedOn:o.invoicedOn,log:o.log?o.log.slice():o.log,remindedOn:o.remindedOn,ptSent:o.ptSent};o.status=st;if(st==='invoiced')o.invoicedOn=TODAY;save();render();pulse(o.id);toast(msg,()=>{Object.assign(o,prev);save();render()})};
 const PREV={invoiced:'new',paid:'invoiced',done:'paid'};
-const autoRun=o=>{if(!S.auto.inv)return;setTimeout(()=>{if(o.status!=='new')return;logM(o,'Invoice emailed automatically');o.status='invoiced';o.invoicedOn=TODAY;save();render();toast(`Invoice emailed to ${first(o)} automatically.`);
+const autoRun=o=>{return;setTimeout(()=>{if(o.status!=='new')return;logM(o,'Invoice emailed automatically');o.status='invoiced';o.invoicedOn=TODAY;save();render();toast(`Invoice emailed to ${first(o)} automatically.`);
   if(S.auto.pay)setTimeout(()=>{if(o.status!=='invoiced')return;logM(o,`Paid ${money(total(o))} through the payment link`);o.status='paid';save();render();toast(`${first(o)} paid ${money(total(o))}. Now Paid, baking.`)},3800)},1600)};
 const land=o=>{S.orders.push(o);last=o.id;zd=null;save();autoRun(o);wk=Math.max(0,WEEKS.findIndex(w=>o.pickup>=w&&o.pickup<=add(w,3)));
   if(cur!=='week')location.hash='week';else render();setTimeout(()=>{last=null},900);setTimeout(()=>document.querySelector(`[data-open="${o.id}"]`)?.scrollIntoView({block:'center',behavior:'smooth'}),60)};
@@ -1312,6 +1363,10 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(e.target.id==='scrim'){closeD();return}
   if(e.target.classList.contains('pback')){closePop();return}
   if(!t)return;
+  if(t.dataset.mc){const o=S.orders.find(x=>x.id===openId);if(o)openMc(o,t.dataset.mc);return}
+  if(t.dataset.mt&&mc){const o=S.orders.find(x=>x.id===mc.id);if(o){mc.k=t.dataset.mt;mc.body=TPL[mc.k][1](o);mc.subj=mc.k==='ask'||mc.k==='change'?'Quick question about your cake order':subjOf(o);renderDrawer();$('mc-body')&&$('mc-body').focus()}return}
+  if(t.dataset.mx){mc=null;renderDrawer();return}
+  if(t.dataset.msend&&mc){const o=S.orders.find(x=>x.id===mc.id);if(o)sendMail(o);return}
   if(t.dataset.open){if(popD){popD=null;$('pwrap').hidden=true}openD(t.dataset.open);return}
   if(t.dataset.day){openPop(t.dataset.day,t);return}
   if(t.id==='pclose'){closePop();return}
@@ -1400,6 +1455,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(t.dataset.remind){const x=reminders().find(r=>r.o.id===t.dataset.remind);if(!x)return;const ok=await copy(remText(x));S.sent.push(x.o.id);save();render();toast(ok?`Reminder for ${first(x.o)} copied. Paste it in a text or DM.`:'Could not copy here. Try again in a full browser tab.',()=>{S.sent=S.sent.filter(i=>i!==x.o.id);save();render()});return}
   if(t.dataset.redeem){const em=t.dataset.redeem;S.red[em]=(S.red[em]||0)+1;save();render();toast('$25 off used. Take it off their next invoice.',()=>{S.red[em]--;save();render()});return}
   if(t.dataset.qa){const [k,id]=t.dataset.qa.split(':'),q=S.orders.find(x=>x.id===id);if(!q)return;
+    if(k==='rev'){openD(q.id);setTimeout(()=>$('mailh')&&q.mail&&q.mail.length&&$('mailh').scrollIntoView({block:'start',behavior:'smooth'}),400);return}
     if(k==='send'){const pv=q.log?q.log.slice():q.log;logM(q,'Invoice emailed');setSt(q,'invoiced',`Invoice emailed to ${q.email}.`);return}
     if(k==='remind'){q.remindedOn=TODAY;logM(q,'Payment reminder emailed');save();render();toast(`Reminder emailed to ${first(q)}.`);return}
     if(k==='psend'){q.ptSent=TODAY;logM(q,`Pickup text sent to ${q.phone}`);save();render();toast(q.time?`Pickup text sent to ${first(q)}.`:`Asked ${first(q)} what time works. Add it when they reply.`);return}
@@ -1416,7 +1472,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(popD)closePop();else if(openId)closeD();else if(zd&&cur==='week')zoomOut()}
   if(zd&&cur==='week'&&!openId&&(e.key==='ArrowLeft'||e.key==='ArrowRight')&&!e.target.matches('input,select,textarea'))$(e.key==='ArrowLeft'?'prev':'next').click();if(e.key==='Enter'&&e.target.matches('tr[data-open]'))openD(e.target.dataset.open)});
-document.addEventListener('input',e=>{const ti=e.target;if(ti.dataset.fcs||ti.dataset.fcn){fset(ti.dataset.fcs||ti.dataset.fcn,ti.dataset.fcn?Math.max(0,+ti.value||0):ti.value);const was=!!S.fcd;clean();save();renderPreview();if(was!==!!S.fcd||S.fcd)renderDbar();ti.closest('.br,.bcq')?.classList.toggle('x',0);return}if(e.target.id==='wif'){whatIf=+e.target.value;const pm=+$('wifm').dataset.pm||0;renderWif();return}if(e.target.id==='cq'){cq=e.target.value;renderCustomers();const i=$('cq');i.focus();i.setSelectionRange(cq.length,cq.length);return}if(e.target.id==='cnote'&&popD&&popD.startsWith('cust:')){const v=e.target.value.trim(),em=popD.slice(5);if(v)S.cnote[em]=v;else delete S.cnote[em];save();return}if(popD==='hol'&&e.target.dataset.hfld){hd[e.target.dataset.hfld]=e.target.value;return}if(e.target.id==='oq'){oq=e.target.value;renderRows()}else if(e.target.closest('#oform'))upd()});
+document.addEventListener('input',e=>{const ti=e.target;if(mc&&ti.id==='mc-body'){mc.body=ti.value;return}if(mc&&ti.id==='mc-subj'){mc.subj=ti.value;return}if(ti.dataset.fcs||ti.dataset.fcn){fset(ti.dataset.fcs||ti.dataset.fcn,ti.dataset.fcn?Math.max(0,+ti.value||0):ti.value);const was=!!S.fcd;clean();save();renderPreview();if(was!==!!S.fcd||S.fcd)renderDbar();ti.closest('.br,.bcq')?.classList.toggle('x',0);return}if(e.target.id==='wif'){whatIf=+e.target.value;const pm=+$('wifm').dataset.pm||0;renderWif();return}if(e.target.id==='cq'){cq=e.target.value;renderCustomers();const i=$('cq');i.focus();i.setSelectionRange(cq.length,cq.length);return}if(e.target.id==='cnote'&&popD&&popD.startsWith('cust:')){const v=e.target.value.trim(),em=popD.slice(5);if(v)S.cnote[em]=v;else delete S.cnote[em];save();return}if(popD==='hol'&&e.target.dataset.hfld){hd[e.target.dataset.hfld]=e.target.value;return}if(e.target.id==='oq'){oq=e.target.value;renderRows()}else if(e.target.closest('#oform'))upd()});
 document.addEventListener('change',e=>{const t=e.target;
   if(t.id==='pack'){$('fpuby').disabled=!t.checked;return}
   if(t.dataset.fcsel){fset(t.dataset.fcsel,t.value);clean();save();render();return}
