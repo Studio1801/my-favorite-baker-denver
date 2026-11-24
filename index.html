@@ -769,7 +769,7 @@ const shortO=o=>{const s=SIZES[o.size];return o.size==='taste'?'Tasting box':s.d
 const renderNeeds=()=>{const N=[],tmr=add(TODAY,1),d3=d=>wd(d).slice(0,3);
   S.orders.forEach(o=>{const f=esc(first(o)),sh=esc(shortO(o));
     if(o.status==='new')N.push({g:'new',o,u:o.pickup,n:f,d:`${sh}, ${d3(o.pickup)}, ${money(total(o))}`,b:['send','Send invoice']});
-    else if(o.status==='invoiced'){const due=add(o.invoicedOn,2);if(due<=tmr)N.push({g:'invoiced',o,u:due,n:f,hot:due<=TODAY,d:`${due<TODAY?'Late':due===TODAY?'Due today':'Due tomorrow'}, ${money(total(o))}${o.remindedOn?', reminded':''}`,b:['paid','Got paid'],b2:S.auto.rem||o.remindedOn===TODAY?null:['remind','Remind']})}
+    else if(o.status==='invoiced'){const due=add(o.invoicedOn,2);if(due<=tmr)N.push({g:'invoiced',o,u:due,n:f,hot:due<=TODAY,d:`${due<TODAY?'Late':due===TODAY?'Due today':'Due tomorrow'}, ${money(total(o))}${o.remindedOn?', reminded':''}`,b:['paid','Mark as paid'],b2:S.auto.rem||o.remindedOn===TODAY?null:['remind','Remind']})}
     else if(o.status==='paid'&&o.pickup===tmr&&!o.time)N.push({g:'paid',o,u:o.pickup,n:f,d:`${sh}, tomorrow${o.picker.type==='uber'?', Uber':''}`,b:['psend','Send text']})});
   const L=zd?N.filter(n=>n.o.pickup===zd):N,GR=[['new','Send invoice'],['invoiced','Chase payment'],['paid','Set pickup time']];
   const hu=S.hol.filter(h=>!h.paid).length,rm=reminders().length;
@@ -781,7 +781,7 @@ const renderNeeds=()=>{const N=[],tmr=add(TODAY,1),d3=d=>wd(d).slice(0,3);
 
 const TIMES=[...Array(23)].map((_,i)=>{const m=480+i*15;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')});
 const tick=o=>{const pk=o.picker.type,al=o.allergies&&o.allergies!=='None';
-  const act={new:`<button type="button" class="qa" data-qa="send:${o.id}">Send invoice</button>`,invoiced:`<button type="button" class="qa" data-qa="paid:${o.id}">Got paid</button>${o.remindedOn===TODAY?'<span class="donel">Reminded today</span>':`<button type="button" class="qa ghost" data-qa="remind:${o.id}">Send reminder</button>`}`,
+  const act={new:`<button type="button" class="qa" data-qa="send:${o.id}">Send invoice</button>`,invoiced:`<button type="button" class="qa" data-qa="paid:${o.id}">Mark as paid</button>${o.remindedOn===TODAY?'<span class="donel">Reminded today</span>':`<button type="button" class="qa ghost" data-qa="remind:${o.id}">Send reminder</button>`}`,
     paid:o.time?`<button type="button" class="qa" data-qa="psend:${o.id}">${o.ptSent?'Text again':'Send pickup text'}</button><button type="button" class="qa ghost" data-qa="done:${o.id}">Picked up</button>`:'',done:'<span class="donel">Complete</span>'}[o.status];
   const tc=o.time?`<b>${t12(o.time)}</b>`:o.status==='paid'?`<label class="tset"><span>Set a time</span><select data-tset="${o.id}" aria-label="Pickup time for ${esc(first(o))}"><option value="">Choose</option>${TIMES.filter(t=>t>=hrsOf(o.pickup)[0]&&t<=hrsOf(o.pickup)[1]).map(t=>`<option value="${t}">${t12(t)}</option>`).join('')}</select></label>`:'<b style="color:var(--mute)">No time</b>';
   const pw=pk==='uber'?'Uber driver picks up':pk==='other'&&o.picker.name?esc(o.picker.name.split(' ')[0])+' picks up':'Customer picks up';
@@ -1211,7 +1211,7 @@ const sketch='<svg width="96" height="72" viewBox="0 0 96 72" fill="none" stroke
 const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();return}
   const pk=o.picker.type,rush=gap(o.placed,o.pickup)<7,c=custOf(o),s=SIZES[o.size];
   const acts={new:`<button type="button" class="btn" data-qa="send:${o.id}">Send invoice</button><button type="button" class="btn soft" data-act="invoice">Copy it instead</button><p class="hint">Emails ${esc(o.email)} the price and a payment link. Moves this to Pending payment.</p>`,
-    invoiced:`<button type="button" class="btn" data-qa="paid:${o.id}">Got paid</button><button type="button" class="btn soft" data-qa="remind:${o.id}">Send payment reminder</button><p class="hint">${S.auto.pay?'Moves to Paid, baking by itself when they pay through the link.':'Moves this to Paid, baking.'}</p>`,
+    invoiced:`<button type="button" class="btn" data-qa="paid:${o.id}">Mark as paid</button><button type="button" class="btn soft" data-qa="remind:${o.id}">Send payment reminder</button><p class="hint">${S.auto.pay?'Moves to Paid, baking by itself when they pay through the link.':'Moves this to Paid, baking.'}</p>`,
     paid:`<button type="button" class="btn" data-qa="psend:${o.id}">Send pickup text</button><button type="button" class="btn soft" data-act="ptext">Copy it</button><button type="button" class="btn soft" data-qa="done:${o.id}">Customer picked up</button>`,done:'<p class="sub">Picked up. This order is complete.</p>'};
   const lg=(o.log&&o.log.length?o.log:[o.invoicedOn&&{d:o.invoicedOn,m:'Invoice emailed'},(o.status==='paid'||o.status==='done')&&o.invoicedOn&&{d:add(o.invoicedOn,1),m:'Paid through the payment link'}].filter(Boolean));
   const sch=[o.status==='invoiced'&&S.auto.rem&&!o.remindedOn&&`Payment reminder, ${md(add(o.invoicedOn,1)>TODAY?add(o.invoicedOn,1):add(TODAY,1))}`,(o.status==='paid'||o.status==='invoiced')&&S.auto.pick&&o.pickup>add(TODAY,1)&&!o.ptSent&&`Pickup reminder, ${md(add(o.pickup,-1))} at 9am`,o.status!=='done'&&S.auto.thx&&`Thank you note, after pickup`].filter(Boolean);
