@@ -607,6 +607,10 @@ box.addEventListener('click',e=>{const b=e.target.closest('[data-cv]');if(b){go(
 go(0);setPlay(playing);tick();
 new IntersectionObserver(es=>es.forEach(en=>{vis=en.isIntersecting;setPlay(playing)}),{threshold:.35}).observe(q('.vid'));
 }}
+/* media store: big images live in IndexedDB so localStorage never overflows */
+const MDB=()=>new Promise((r,j)=>{try{const q=indexedDB.open('mfb-media',1);q.onupgradeneeded=()=>q.result.createObjectStore('m');q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)}catch(e){j(e)}});
+const mput=async(k,v)=>{const d=await MDB();return new Promise((r,j)=>{const t=d.transaction('m','readwrite');t.objectStore('m').put(v,k);t.oncomplete=()=>r(true);t.onerror=()=>j(t.error)})};
+const mget=async k=>{const d=await MDB();return new Promise((r,j)=>{const q=d.transaction('m').objectStore('m').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)})};
 /* ---------- paint and piping studio ---------- */
 if(!O.art||!Array.isArray(O.art.ops))O.art={ops:[]};
 const ST={mode:false,tool:'pipe',col:'#f2a1b4',sz:1,sel:-1,hist:[],drag:null};
@@ -668,7 +672,7 @@ const openSheet=()=>{let sh=$('stsheet');if(!sh){sh=document.createElement('div'
   sh.hidden=false;$('stslotm').appendChild(STU);ST.mode=true;ST.hist=[];stRender();document.body.style.overflow='hidden';if(!RM())sh.querySelector('.stsh-in').animate([{transform:'translateY(100%)'},{transform:'none'}],{duration:420,easing:'cubic-bezier(.22,1,.36,1)'})};
 const closeSheet=()=>{const sh=$('stsheet');sh.hidden=true;document.body.style.overflow='';const s=$('stslot');if(s)s.appendChild(STU);stRender()};
 addEventListener('resize',()=>requestAnimationFrame(redraw));
-const snapArt=()=>new Promise(res=>{try{const W=720,H=600,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,W,H);
+const snapArt=(W=720,H=600)=>new Promise(res=>{try{c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,W,H);
   const svg=preview(false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" ');const im=new Image();
   im.onload=()=>{x.drawImage(im,0,0,W,H);paintOps(x,W,H,O.art.ops,-1,false);try{res(c.toDataURL('image/png'))}catch(e){res('')}};im.onerror=()=>{paintOps(x,W,H,O.art.ops,-1,false);res(c.toDataURL('image/png'))};
   im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}catch(e){res('')}});
@@ -691,14 +695,22 @@ let io=null;const observe=()=>{io&&io.disconnect();io=new IntersectionObserver(e
   if(RM())return;const rv=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!e.target.dataset.seen){e.target.dataset.seen=1;e.target.animate([{opacity:.0,transform:'translateY(22px)'},{opacity:1,transform:'none'}],{duration:650,easing:'cubic-bezier(.22,1,.36,1)'});rv.unobserve(e.target)}}),{rootMargin:'0px 0px -6% 0px'});document.querySelectorAll('.sec').forEach((x,i)=>{if(x.getBoundingClientRect().top<innerHeight){x.dataset.seen=1}else rv.observe(x)})};
 const jump=k=>{const el=$('s-'+k);if(!el)return;const top=el.getBoundingClientRect().top+scrollY-($('nav').offsetHeight+14);scrollTo({top,behavior:RM()?'auto':'smooth'})};
 /* ---------- submit ---------- */
-const send=async()=>{const s=sz(),id='w'+Date.now(),T=total();const art=O.art.ops.length?await snapArt():'';
+const shrink=(url,max,q)=>new Promise(res=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res({url:c.toDataURL('image/jpeg',q),w:c.width,h:c.height})};im.onerror=()=>res(null);im.src=url});
+let sending=false;
+const send=async()=>{if(sending)return;sending=true;const sb=document.querySelectorAll('#send');sb.forEach(b=>{b.disabled=true;b.textContent='Sending...'});
+  const s=sz(),id='w'+Date.now(),T=total(),hasArt=O.art.ops.length>0;
+  const artFull=hasArt?await snapArt(1440,1200):'',art=hasArt?await snapArt(360,300):'';
+  const ph=(await Promise.all(photos.map(async p=>{const r=await shrink(p.url,1800,.86);return r&&{name:p.name,...r}}))).filter(Boolean);
+  let media='';if(artFull||ph.length){try{await mput(id,{artFull,photos:ph,at:new Date().toISOString()});media=id}catch(e){media=''}}
   const fx={sz:Object.fromEntries(Object.entries(F.sizes).map(([k,v])=>[k,+v.p])),up:Object.fromEntries(F.flav.map(x=>[x.n,+x.up||0])),add:Object.fromEntries(F.adds.map(x=>[x.n,+x.p||0])),fill:+F.fillFee,incl:+F.incl,col:+F.colFee,rush:F.rushOn?+F.rush:0,lead:+F.lead};
   const extra=F.custom.filter(c=>c.on&&c.l.trim()).map(c=>[c.l,[].concat(O.cq[c.id]||[]).join(', ')]).filter(x=>x[1]);
   const o={id,time:'',name:O.name.trim(),email:O.email.trim(),phone:O.phone.trim(),ig:O.ig.trim(),pickup:O.pickup,size:O.size,qty:s.doz?O.qty:1,shape:s.k==='cake'?(O.size==='sheet'?'Sheet':O.size==='twelve'?'Round':O.shape):'',
     flavor:isTaste()?'':O.flavor,filling:isTaste()||isCup()?'':O.filling,frosting:isTaste()?'':O.frosting,colors:isTaste()?[]:[...O.colors,...(O.colOther.trim()?[O.colOther.trim()]:[])],text:O.text.trim(),addons:O.addons,placed:TODAY,status:'new',invoicedOn:'',
-    picker:{type:O.pk,name:O.pkname,phone:O.pkphone},forWho:O.forWho.trim()||'Not given',allergies:O.allergies.trim()||'None',notes:[O.notes.trim(),O.heard.trim()?'Heard about me: '+O.heard.trim():''].filter(Boolean).join('\n'),photo:photos.length>0,hon:'',bday:false,extra,fx,via:'web',art,artN:O.art.ops.length};
+    picker:{type:O.pk,name:O.pkname,phone:O.pkphone},forWho:O.forWho.trim()||'Not given',allergies:O.allergies.trim()||'None',notes:O.notes.trim(),heard:O.heard.trim(),no:'MFB-'+id.slice(-5),photo:ph.length>0,photoN:ph.length,photoNames:ph.map(p=>p.name),media,...(media?{}:{artFull,photos:ph}),hon:'',bday:false,extra,fx,via:'web',art,artN:O.art.ops.length};
   if(PREV){$('nav').hidden=true;$('bar').hidden=true;$('hero').hidden=true;$('app').innerHTML='<div class="done"><h1>Test order looks good</h1><p class="lede">This is just the preview, so nothing was sent.</p><button type="button" class="btn soft" id="again">Back to the form</button></div>';return}
-  try{const ib=JSON.parse(localStorage.getItem(INBOX)||'[]');ib.push(o);localStorage.setItem(INBOX,JSON.stringify(ib));localStorage.removeItem(DRAFT)}catch(e){}
+  try{const ib=JSON.parse(localStorage.getItem(INBOX)||'[]');ib.push(o);localStorage.setItem(INBOX,JSON.stringify(ib));localStorage.removeItem(DRAFT)}
+  catch(e){sending=false;sb.forEach(b=>{b.disabled=false;b.textContent='Send my order'});alert('Your order could not be saved. Please try again, or remove a photo and send again.');return}
+  sending=false;
   const no='MFB-'+id.slice(-5),dep=F.deposit<100?Math.round(T*F.deposit/100):T;
   $('nav').hidden=true;$('bar').hidden=true;$('hero').hidden=true;
   $('app').innerHTML=`<div class="done"><div class="tick"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>

@@ -496,6 +496,22 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 #mailh small{font:600 12px var(--sans,inherit);color:var(--soft);margin-left:4px}
 .artth{display:block;width:100%;max-width:150px;aspect-ratio:6/5;object-fit:contain;background:#fff;border-radius:12px;margin:6px 0 2px;box-shadow:0 0 0 1px var(--line)}
 .artf{margin:16px 0 4px;background:var(--rail);border-radius:20px;padding:10px}.artf img{display:block;width:100%;border-radius:14px;background:#fff}.artf figcaption{font-size:13px;color:var(--soft);padding:8px 4px 2px}.artf figcaption b{display:block;color:var(--ink);font-size:14.5px}.artf a{color:var(--cherry);font-weight:600}
+.mdia{display:grid;gap:12px;margin-top:14px}.mload{border-radius:18px;background:var(--rail);padding:28px;text-align:center;color:var(--soft);font-size:14px}
+.artf{margin:0}.zbtn{display:block;width:100%;border:0;padding:0;background:#fff;border-radius:14px;position:relative;cursor:zoom-in;overflow:hidden}.zbtn img{display:block;width:100%}.zh{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--ink)}
+.phs b{display:block;font-size:14.5px;margin:0 0 8px}.phs small{color:var(--soft);font-weight:600;margin-left:4px}.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph{border:0;padding:0;border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--rail);cursor:zoom-in}.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s cubic-bezier(.22,1,.36,1)}.ph:hover img{transform:scale(1.05)}
+.mwarn{margin:0;font-size:13px;color:var(--cherry);background:#fff3f5;border-radius:12px;padding:10px 12px}
+.callout{margin:16px 0 0;border-radius:18px;padding:14px 16px;background:#fff7e6;box-shadow:inset 0 0 0 1.5px #f0c56a}.callout b{display:block;font-size:13px;font-weight:700;color:#8a5a00;margin-bottom:4px}.callout p{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink)}
+.callout.warn{background:#fff1f3;box-shadow:inset 0 0 0 1.5px #f3a3b5}.callout.warn b{color:var(--cherry)}
+.cls{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:flex-end}.cls span{display:inline-flex;align-items:center;gap:5px}
+.kv a{color:var(--ink);font-weight:600}
+#lb{position:fixed;inset:0;z-index:95;background:rgba(32,10,14,.92);display:grid;grid-template-rows:auto 1fr auto;color:#fff}#lb[hidden]{display:none}
+.lbtop{display:flex;justify-content:space-between;align-items:center;padding:14px 18px}.lbtop small{opacity:.7;margin-left:6px}.lbtop .x{background:rgba(255,255,255,.15);color:#fff}
+.lbv{overflow:auto;display:grid;place-items:center;padding:0 60px}.lbv img{max-width:100%;max-height:78vh;border-radius:12px;background:#fff;cursor:zoom-in}
+.lbv.zoom{place-items:start}.lbv.zoom img{max-width:none;max-height:none;width:220%;cursor:zoom-out}
+.lbn{position:absolute;top:50%;transform:translateY(-50%);border:0;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:28px}.lbn.p{left:10px}.lbn.n{right:10px}
+.lbh{text-align:center;font-size:12.5px;opacity:.7;margin:10px 0 16px}
+@media(max-width:600px){.lbv{padding:0 8px}.lbn{top:auto;bottom:40px;transform:none}}
 .mlog{list-style:none;margin:0;padding:0}.mlog li{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px}
 .mlog i{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1.5px var(--mute)}.mlog i.ok{background:var(--c-paid);box-shadow:none}
 .mlog span{flex:1}.mlog em{font-style:normal;color:var(--soft);font-size:13px;white-space:nowrap}.mlog li.sch{color:var(--soft)}
@@ -732,7 +748,27 @@ const FC0=()=>({live:true,title:'Cake order form',intro:'Pickup only in Thornton
   notes:{"hello": "My name is Carlie! Please read these before you order. I know it's a lot, I just want this to be smooth and easy for both of us.", "sign": "Thank you so much! xo, Carlie", "heroKick": "hi there, cake lover", "heroTitle": "Let's make your cake.", "heroLede": "Tell me what you're dreaming up. Pick your size, flavor and colors, and watch it come together as you go.", "groups": [{"id": "g1", "ic": "pin", "t": "Pickup", "on": true, "body": "Home baker in Thornton, | about 25 minutes outside Denver. I send the address the day before pickup.\nTuesday to Friday, 8am to 1:30pm. | I reach out the day before to set a time that works for both of us.\nPlease don't be late. | I work two full time jobs and plan my day around your pickup. If you're running late, just message me.\nSomeone else picking up? | I need their name and phone number so I can coordinate with them.\nNeed it for the weekend? | Pick up the Friday before. Cakes keep in the fridge up to 4 days.\nPickup times | may change now and then."}, {"id": "g2", "ic": "car", "t": "Delivery and travel", "on": true, "body": "No delivery, | but you can book an Uber driver to grab it.\nOnce it leaves my hands, | it's not my liability. If it's dropped or damaged, I can't fix it.\nKeep car rides under 2 hours, | especially in summer. Buttercream softens fast and can melt off.\nFridge friendly. | Cakes keep in the fridge up to 4 days after pickup."}, {"id": "g3", "ic": "clock", "t": "Booking", "on": true, "body": "Order at least 7 days ahead. | Anything sooner has a $50 rush fee.\nBook no more than 2 months out. | Need a cake June 1? The soonest you can order is April 1.\nDate not showing? | That means I'm fully booked that day."}, {"id": "g4", "ic": "mail", "t": "Ordering and payment", "on": true, "body": "Be 100% sure before ordering. | Flavors, fillings, colors and design all go on this form. Need creative help? DM me first.\nPlease don't email add-ons later. | Everything needs to be on the form.\nI'll email your invoice | with a payment link. It may take a few days since I work full time.\nPay in full within 2 days | to get on my books. Not ready to pay yet? Please wait to order.\nThe flavors below | are the only ones I'm offering right now.\nPrices on the form are base prices. | Add-ons are extra."}, {"id": "g5", "ic": "gift", "t": "Gender reveal cakes", "on": true, "body": "Email me the gender | at myfavoritebakerdenver@gmail.com. I need it before I can accept your order.\nStill waiting on bloodwork? | Please wait to order until you have the results."}]},
   custom:[]});
 if(S.fc&&S.fc.ver!==3){S.fc=null;S.fcd=null;S.fch=[];setTimeout(()=>{try{localStorage.setItem('mfb-book-v2',JSON.stringify(S))}catch(e){}},0)}S.fc=Object.assign(FC0(),S.fc||{});S.fc.ver=3;if(S.fcd)S.fcd.ver=3;if(!S.fc.notes)S.fc.notes=FC0().notes;if(!S.fc.cut)S.fc.cut=FC0().cut;[S.fc,S.fcd].forEach(x=>{if(x&&x.q&&!x.q.heard)x.q.heard=FC0().q.heard});if(S.fcd&&!S.fcd.cut)S.fcd.cut=FC0().cut;S.fch=S.fch||[];S.goal=S.goal||3000;S.cnote=S.cnote||{};S.auto=S.auto||{inv:true,pay:true,rem:true,pick:true,thx:true};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){return false}};
+/* media store: big images live in IndexedDB so localStorage never overflows */
+const MDB=()=>new Promise((r,j)=>{try{const q=indexedDB.open('mfb-media',1);q.onupgradeneeded=()=>q.result.createObjectStore('m');q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)}catch(e){j(e)}});
+const mput=async(k,v)=>{const d=await MDB();return new Promise((r,j)=>{const t=d.transaction('m','readwrite');t.objectStore('m').put(v,k);t.oncomplete=()=>r(true);t.onerror=()=>j(t.error)})};
+const mget=async k=>{const d=await MDB();return new Promise((r,j)=>{const q=d.transaction('m').objectStore('m').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)})};
+const SERV={mini:'5 to 7 small servings',classic:'20 to 22 small servings',twelve:'Up to 40 small servings',tier:'25 to 29 small servings',sheet:'32 to 36 small servings',cup:'12 per dozen',floral:'12 per dozen',minicup:'12 per dozen',taste:'4 flavor combos',baby:'Up to 4 servings'};
+const MC={};const loadMedia=o=>{if(!o.media||MC[o.id])return;MC[o.id]='loading';mget(o.media).then(v=>{MC[o.id]=v||{missing:true};if(openId===o.id)renderMedia(o)}).catch(()=>{MC[o.id]={missing:true};if(openId===o.id)renderMedia(o)})};
+const mediaOf=o=>{const m=MC[o.id];if(!o.media)return{artFull:o.artFull||o.art||'',photos:o.photos||[]};if(!m||m==='loading')return null;return{artFull:m.artFull||o.art||'',photos:m.photos||[],missing:m.missing}};
+const mediaHTML=o=>{const F=esc(first(o)),m=mediaOf(o);if(!o.art&&!o.photoN&&!o.photo)return'';
+  if(!m)return`<div class="mdia"><div class="mload">Loading ${F}'s design and photos</div></div>`;
+  const want=o.photoN||0,got=m.photos.length,warn=(o.artN&&!m.artFull)||got<want?`<p class="mwarn">${got<want?`${want-got} of ${want} photo${want>1?'s':''}`:'The design'} could not be loaded on this device. Open the order on the computer it was placed from, or ask ${F} to resend.</p>`:'';
+  const art=m.artFull?`<figure class="artf"><button type="button" class="zbtn" data-zoom="art" aria-label="Zoom in on ${F}'s design"><img src="${m.artFull}" alt="${F}'s painted cake design"><span class="zh">Tap to zoom</span></button><figcaption><b>${F}'s design</b>Painted on the order form${o.artN?`, ${o.artN} decoration${o.artN>1?'s':''}`:''}. <a href="${m.artFull}" download="${esc(o.name).replace(/\s+/g,'-')}-design.png">Save image</a></figcaption></figure>`:'';
+  const ph=got?`<div class="phs"><b>Inspiration photos <small>${got}</small></b><div class="phg">${m.photos.map((p,i)=>`<button type="button" class="ph" data-zoom="p${i}" aria-label="View photo ${i+1} full size"><img src="${p.url}" alt="Inspiration photo ${i+1}${p.name?': '+esc(p.name):''}" loading="lazy"></button>`).join('')}</div></div>`:o.photo&&!o.media&&!o.photos?`<div class="insp">${sketch}<span>Inspiration photo from the form (sample order)</span></div>`:'';
+  return `<div class="mdia" id="dmedia">${art}${ph}${warn}</div>`};
+const renderMedia=o=>{const el=$('dmedia')||document.querySelector('#drawer .mdia');if(el)el.outerHTML=mediaHTML(o)};
+const zoom=(o,k)=>{const m=mediaOf(o);if(!m)return;const L=[...(m.artFull?[{u:m.artFull,c:first(o)+"'s design"}]:[]),...m.photos.map((p,i)=>({u:p.url,c:'Photo '+(i+1)+(p.name?', '+p.name:'')}))];let i=k==='art'?0:(m.artFull?1:0)+(+k.slice(1));
+  let lb=$('lb');if(!lb){lb=document.createElement('div');lb.id='lb';lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');document.body.appendChild(lb)}
+  const show=()=>{lb.innerHTML=`<div class="lbtop"><span>${esc(L[i].c)} <small>${i+1} of ${L.length}</small></span><button type="button" class="x" data-lb="x" aria-label="Close">&times;</button></div><div class="lbv"><img src="${L[i].u}" alt="${esc(L[i].c)}" data-lb="z"></div>${L.length>1?`<button type="button" class="lbn p" data-lb="-1" aria-label="Previous">&#8249;</button><button type="button" class="lbn n" data-lb="1" aria-label="Next">&#8250;</button>`:''}<p class="lbh">Click the image to zoom. Esc to close.</p>`};
+  show();lb.hidden=false;lb.onclick=e=>{const a=e.target.closest('[data-lb]')?.dataset.lb;if(a==='x'||e.target===lb){lb.hidden=true;return}if(a==='z'){const v=lb.querySelector('.lbv');const z=v.classList.toggle('zoom');if(z){const r=e.target.getBoundingClientRect();requestAnimationFrame(()=>{v.scrollLeft=(e.clientX-r.left)/r.width*v.scrollWidth-v.clientWidth/2;v.scrollTop=(e.clientY-r.top)/r.height*v.scrollHeight-v.clientHeight/2})}return}if(a){i=(i+ +a+L.length)%L.length;show()}};
+  if(!RM())lb.animate([{opacity:0},{opacity:1}],{duration:220})};
+addEventListener('keydown',e=>{const lb=$('lb');if(!lb||lb.hidden)return;if(e.key==='Escape'){lb.hidden=true;e.stopPropagation()}if(e.key==='ArrowRight')lb.querySelector('[data-lb="1"]')?.click();if(e.key==='ArrowLeft')lb.querySelector('[data-lb="-1"]')?.click()},true);
 let cur='week',wk=0,cm=0,openId=null,last=null,undoFn=null,tt,of='upcoming',oq='',sf=null,zd=null;
 
 const cnt=d=>S.orders.filter(o=>o.pickup===d).length;
@@ -1268,7 +1304,7 @@ const mailHTML=o=>{const L=o.mail||[],F=esc(first(o));
 const reviewActs=o=>{const F=esc(first(o));
   const msg=o.rv==='replied'?`<p class="rvn hot">${F} replied. Read it below, then confirm or write back.</p>`:o.rv==='asked'?`<p class="rvn">Waiting on ${F}'s reply. You can still confirm any time.</p>`:`<p class="rvn">New request. Check the details below, then confirm it or ask ${F} a question first.</p>`;
   return `${msg}<button type="button" class="btn" data-mc="confirm">Confirm order</button><button type="button" class="btn soft" data-mc="${o.rv==='replied'?'ask':'ask'}">${o.rv==='replied'?'Reply':o.rv==='asked'?'Send another message':'Ask a question'}</button>`};
-const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();return}
+const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();return}loadMedia(o);
   const pk=o.picker.type,rush=gap(o.placed,o.pickup)<7,c=custOf(o),s=SIZES[o.size];
   const acts={new:o.rv!=='ok'?reviewActs(o):`<button type="button" class="btn" data-qa="send:${o.id}">Send invoice</button><button type="button" class="btn soft" data-act="invoice">Copy it instead</button><p class="hint">Emails ${esc(o.email)} the price and a payment link. Moves this to Pending payment.</p>`,
     invoiced:`<button type="button" class="btn" data-qa="paid:${o.id}">Mark as paid</button><button type="button" class="btn soft" data-qa="remind:${o.id}">Send payment reminder</button><p class="hint">${S.auto.pay?'Moves to Paid, baking by itself when they pay through the link.':'Moves this to Paid, baking.'}</p>`,
@@ -1279,18 +1315,21 @@ const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();
   const big=`<div class="big s-${o.status}">${ORD.map((k,i)=>`<div class="${i<=ORD.indexOf(o.status)?'on':''}${k===o.status?' cur':''}" style="--c-x:${CV[o.status]}"><i></i>${ST[k]}</div>`).join('')}</div>`;
   $('drawer').innerHTML=`<div class="dtop"><div><h2>${esc(o.name)}</h2><p class="sub">For ${esc(o.forWho)}. Ordered ${md(o.placed)}${rush?', <span class="hot2">rush order</span>':''}</p>${c?`<p class="sub" style="margin-top:2px">${ord(c.orders.length)} order with you, ${c.pts} reward points</p>`:''}</div><button type="button" class="x" id="x" aria-label="Close">&times;</button></div>
   ${big}
-  <div class="acts">${acts[o.status]}</div>${o.art?`<figure class="artf"><img src="${o.art}" alt="${esc(first(o))}'s painted cake design"><figcaption><b>${esc(first(o))}'s design</b>Painted on the order form${o.artN?`, ${o.artN} decoration${o.artN>1?'s':''}`:''}. <a href="${o.art}" download="${esc(o.name).replace(/\s+/g,'-')}-cake.png">Save image</a></figcaption></figure>`:''}<textarea id="cbx" hidden aria-label="Text to copy"></textarea>
-  <h4>Pickup</h4>${kv('Day',wds(o.pickup))}
-  <label class="kv" for="d-time"><span>Time</span><input id="d-time" type="time" min="08:00" max="13:30" step="900" value="${esc(o.time)}"></label>
+  <div class="acts">${acts[o.status]}</div><textarea id="cbx" hidden aria-label="Text to copy"></textarea>
+  ${mediaHTML(o)}
+  ${o.notes?`<div class="callout"><b>${esc(first(o))}'s note</b><p>${esc(o.notes).replace(/\n/g,'<br>')}</p></div>`:''}
+  ${o.allergies&&!/^(none|no|n\/a|na)\.?$/i.test(o.allergies.trim())?`<div class="callout warn"><b>Allergies or dietary needs</b><p>${esc(o.allergies)}</p></div>`:''}
+  <h4>The cake</h4>${kv('Size',esc(s.n))}${kv('Servings',esc(SERV[o.size]||''))}${s.doz?kv('Quantity',`${o.qty} dozen, ${o.qty*12} ${o.size==='minicup'?'mini cupcakes':'cupcakes'}`):''}${kv('Shape',s.doz||o.size==='taste'?'':esc(o.shape))}${kv('Cake flavor',esc(o.flavor))}${kv('Filling',esc(o.filling)||(s.doz||o.size==='taste'?'':'None'))}
+  ${kv('Buttercream',o.frosting?esc(o.frosting):'')}${o.colors.length?`<div class="kv"><span>Colors</span><span class="cls">${o.colors.map(c=>`<span><i class="sw" style="background:${SW[c]||'#fff'}"></i>${esc(c)}</span>`).join('')}</span></div>`:''}
+  ${o.text?`<div class="kv"><span>Writing</span><span class="wr">${esc(o.text)}</span></div>`:''}${kv('Add-ons',esc(o.addons.join(', '))||'None')}${kv('Painted on the form',o.artN?`${o.artN} decoration${o.artN>1?'s':''}`:'')}${kv('Inspiration photos',o.photoN?String(o.photoN):'')}
+  <h4>Pickup</h4>${kv('Day',wds(o.pickup)+(rush?' <span class="hot2">rush</span>':''))}${kv('Pickup window',hrsOf(o.pickup).map(t12).join(' to '))}
+  <label class="kv" for="d-time"><span>Exact time</span><input id="d-time" type="time" min="08:00" max="13:30" step="900" value="${esc(o.time)}"></label>
   <fieldset class="pk"><legend>Who picks up</legend>${[['me','The customer'],['uber','An Uber driver'],['other','Someone else']].map(([v,l])=>`<label for="pk-${v}"><input type="radio" name="dpk" id="pk-${v}" value="${v}"${pk===v?' checked':''}>${l}</label>`).join('')}</fieldset>
   ${pk==='uber'?'<p class="hint">The customer books the Uber. Box it snug for the car ride.</p>':''}
   ${pk==='other'?`<div class="g2"><label class="f" for="d-pn">Name<input id="d-pn" value="${esc(o.picker.name)}"></label><label class="f" for="d-pp">Phone<input id="d-pp" inputmode="tel" value="${esc(o.picker.phone)}"></label></div>`:''}
-  <h4>The order</h4>${kv('Size',esc(s.n+(s.doz?`, ${o.qty} dozen`:'')))}${kv('Shape',s.doz||o.size==='taste'?'':esc(o.shape))}${kv('Cake flavor',esc(o.flavor))}${kv('Filling',esc(o.filling))}
-  ${kv('Buttercream',o.frosting?esc(o.frosting)+(o.colors.length?' &nbsp;'+o.colors.map(c=>`<i class="sw" style="background:${SW[c]||'#ccc'}" title="${esc(c)}"></i>`).join(''):''):'')}${kv('Colors',esc(o.colors.join(', ')))}
-  ${o.text?`<div class="kv"><span>Writing</span><span class="wr">${esc(o.text)}</span></div>`:''}${kv('Add-ons',esc(o.addons.join(', ')))}${kv('Allergies',esc(o.allergies),o.allergies&&o.allergies!=='None'?'hot2':'')}
-  ${(o.extra||[]).map(([k,v])=>kv(esc(k),esc(v))).join('')}${o.ig?kv('Instagram',esc(o.ig)):''}${o.notes?`<div class="kv" style="display:block"><span>Their notes</span><p style="margin:4px 0 0">${esc(o.notes)}</p></div>`:''}${o.photo?`<div class="insp">${sketch}<span>Inspiration photo from the form</span></div>`:''}
+  <h4>About the order</h4>${kv('For',esc(o.forWho))}${kv('Allergies',esc(o.allergies),o.allergies&&o.allergies!=='None'?'hot2':'')}${kv('Found you through',esc(o.heard||''))}${(o.extra||[]).map(([k,v])=>kv(esc(k),esc(v))).join('')}${kv('Order number',esc(o.no||''))}${kv('Ordered',wds(o.placed)+(o.via==='web'?', on your order form':''))}
   ${mailHTML(o)}${msgs}<h4>Price</h4><table class="price">${lines(o).map(l=>`<tr><td>${esc(l[0])}</td><td>$${l[1]}</td></tr>`).join('')}<tr class="tt"><td>Total</td><td>$${total(o)}</td></tr></table>
-  <h4>Contact</h4>${kv('Phone',esc(o.phone))}${kv('Email',esc(o.email))}${o.status!=='new'?'<button type="button" class="back" data-act="back">Move back a step</button>':''}`};
+  <h4>Contact</h4>${kv('Name',esc(o.name))}${kv('Phone',`<a href="tel:${esc(o.phone.replace(/[^\d+]/g,''))}">${esc(o.phone)}</a>`)}${kv('Email',`<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`)}${o.ig?kv('Instagram',esc(o.ig)):''}${o.status!=='new'?'<button type="button" class="back" data-act="back">Move back a step</button>':''}`};
 const openD=id=>{const was=!!openId&&$('drawer').classList.contains('on');openId=id;renderDrawer();$('drawer').scrollTop=0;$('drawer').classList.add('on');$('drawer').setAttribute('aria-hidden','false');$('scrim').classList.add('on');$('x')?.focus({preventScroll:true});
   if(!RM()&&!was)[...$('drawer').children].slice(0,8).forEach((c,i)=>c.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:420,delay:120+i*35,easing:EZ,fill:'backwards'}))};
 const closeD=()=>{mc=null;openId=null;$('drawer').classList.remove('on');$('drawer').setAttribute('aria-hidden','true');$('scrim').classList.remove('on')};
@@ -1365,6 +1404,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(e.target.id==='scrim'){closeD();return}
   if(e.target.classList.contains('pback')){closePop();return}
   if(!t)return;
+  if(t.dataset.zoom){const o=S.orders.find(x=>x.id===openId);if(o)zoom(o,t.dataset.zoom);return}
   if(t.dataset.mc){const o=S.orders.find(x=>x.id===openId);if(o)openMc(o,t.dataset.mc);return}
   if(t.dataset.mt&&mc){const o=S.orders.find(x=>x.id===mc.id);if(o){mc.k=t.dataset.mt;mc.body=TPL[mc.k][1](o);mc.subj=mc.k==='ask'||mc.k==='change'?'Quick question about your cake order':subjOf(o);renderDrawer();$('mc-body')&&$('mc-body').focus()}return}
   if(t.dataset.mx){mc=null;renderDrawer();return}
@@ -1498,8 +1538,11 @@ const subm=e=>{const o=draft(),err=$('ferr'),fd=new FormData(e.target),f=S.fc,Q=
 window.addEventListener('hashchange',route);
 route();
 const FORM_URL=location.origin+'/order';
-const pullInbox=()=>{let ib=[];try{ib=JSON.parse(localStorage.getItem('mfb-inbox')||'[]')}catch(e){}if(!ib.length)return;try{localStorage.removeItem('mfb-inbox')}catch(e){}
-  ib.filter(o=>o&&o.id&&!S.orders.some(x=>x.id===o.id)).forEach((o,i)=>setTimeout(()=>{land(o);toast(`New order from ${first(o)} for ${wds(o.pickup)}, ${money(total(o))}.`)},i*900))};
+const pullInbox=()=>{let ib=[];try{ib=JSON.parse(localStorage.getItem('mfb-inbox')||'[]')}catch(e){}if(!ib.length)return;
+  const nw=ib.filter(o=>o&&o.id&&!S.orders.some(x=>x.id===o.id)&&!pending.has(o.id));nw.forEach(o=>pending.add(o.id));
+  nw.forEach((o,i)=>setTimeout(()=>{land(o);pending.delete(o.id);toast(`New order from ${first(o)} for ${wds(o.pickup)}, ${money(total(o))}.`);
+    if(!pending.size){if(save()){try{const left=JSON.parse(localStorage.getItem('mfb-inbox')||'[]').filter(x=>!S.orders.some(y=>y.id===x.id));if(left.length)localStorage.setItem('mfb-inbox',JSON.stringify(left));else localStorage.removeItem('mfb-inbox')}catch(e){}}else toast('Storage is full, so new orders are kept in the inbox until there is room.')}},i*900))};
+const pending=new Set();
 pullInbox();addEventListener('storage',e=>{if(e.key==='mfb-inbox'&&e.newValue)pullInbox()});addEventListener('focus',pullInbox);
 }
 </script>
