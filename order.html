@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#fadadd">
+<title>Order a cake | My Favorite Baker</title>
+<meta name="description" content="Order a custom cake from My Favorite Baker. Pickup in Thornton, Colorado.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23fadadd'/%3E%3Cpath d='M8 23h16v-6H8z' fill='%235a1622'/%3E%3Cpath d='M10 17v-4h12v4' fill='none' stroke='%235a1622' stroke-width='2'/%3E%3Ccircle cx='16' cy='9' r='2' fill='%23c0163f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Figtree:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fff;--band:#fadadd;--rail:#fdf2f4;--rail2:#f8e2e6;--ink:#5a1622;--soft:#8a5a63;--mute:#c9aab0;--line:#f1d6db;--cherry:#c0163f;--ok:#2f7d57;--warn:#8a5200;--acc:#5a1622;--ez:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--cherry);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:400}
+.serif{font-family:"Young Serif",Georgia,serif}
+
+/* header */
+.top{background:var(--band)}
+.top-in{max-width:1120px;margin:0 auto;padding:18px max(18px,4vw) 22px;display:flex;align-items:center;gap:14px}
+.mark{width:42px;height:42px;flex:none}
+.brand b{display:block;font:22px/1.1 "Young Serif",Georgia,serif;font-weight:400}
+.brand span{font-size:14px;color:var(--soft)}
+.prog{max-width:1120px;margin:0 auto;padding:0 max(18px,4vw) 16px}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.steps button{border:0;background:none;padding:0;text-align:left;font-size:13px;font-weight:600;color:var(--mute);display:grid;gap:6px;min-height:40px;transition:color .25s}
+.steps button i{display:block;height:5px;border-radius:3px;background:#fff;transition:background .4s var(--ez)}
+.steps button.done{color:var(--soft)}.steps button.done i{background:var(--soft)}
+.steps button.on{color:var(--ink)}.steps button.on i{background:var(--acc)}
+.steps button:disabled{cursor:default}
+
+/* layout */
+.wrap{max-width:1120px;margin:0 auto;padding:28px max(18px,4vw) 140px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:40px;align-items:start}
+.stage{min-height:60vh}
+.pane h1{font:clamp(30px,5vw,44px)/1.08 "Young Serif",Georgia,serif;margin:0 0 6px}
+.lede{margin:0 0 22px;color:var(--soft);font-size:16px}
+.q{margin:26px 0 0}.q:first-of-type{margin-top:0}
+.ql{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600;font-size:16px;margin:0 0 10px}
+.ql small{font-weight:500;font-size:13px;color:var(--soft)}
+.rq{color:var(--cherry);margin-left:2px}
+.hint{font-size:13.5px;color:var(--soft);margin:-4px 0 10px}
+
+/* option cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{position:relative;text-align:left;border:0;background:var(--rail);border-radius:18px;padding:14px 14px 13px;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;transition:background .25s,color .25s,transform .2s var(--ez),box-shadow .25s}
+.card b{font-weight:600;font-size:15.5px;line-height:1.25}
+.card span{font-size:14px;color:var(--soft);transition:color .25s}
+.card[aria-pressed=true]{background:var(--acc);color:#fff}.card[aria-pressed=true] span{color:#f6cdd6}
+.card:active{transform:scale(.97)}
+@media(hover:hover){.card:hover:not([aria-pressed=true]){box-shadow:inset 0 0 0 2px var(--line)}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;background:var(--rail);border-radius:999px;padding:9px 15px;min-height:42px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:background .22s,color .22s,transform .2s var(--ez)}
+.chip small{font-weight:500;font-size:13px;color:var(--soft)}
+.chip[aria-pressed=true]{background:var(--acc);color:#fff}.chip[aria-pressed=true] small{color:#f6cdd6}
+.chip:active{transform:scale(.95)}
+.chip:disabled{opacity:.4;cursor:not-allowed}
+.sw{width:18px;height:18px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(90,22,34,.18)}
+.cnt{font-size:13px;font-weight:600;color:var(--soft)}.cnt.over{color:var(--cherry)}
+.qty{display:flex;align-items:center;gap:14px;background:var(--rail);border-radius:18px;padding:10px 14px;width:max-content}
+.qty button{width:40px;height:40px;border:0;border-radius:50%;background:#fff;font-size:20px;line-height:1;transition:transform .15s}
+.qty button:active{transform:scale(.9)}.qty b{min-width:4.5em;text-align:center;font-size:16px}
+
+/* inputs */
+.fld{display:block;margin:0 0 14px}
+.fld>span{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
+.fld>span small{font-weight:500;color:var(--soft);font-size:13px;margin-left:4px}
+.in{width:100%;border:0;border-radius:14px;background:var(--rail);padding:13px 15px;min-height:50px;font-size:16px;transition:box-shadow .2s,background .2s}
+.in:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--acc)}
+textarea.in{min-height:110px;resize:vertical;line-height:1.45}
+.in.bad{box-shadow:inset 0 0 0 2px var(--cherry);background:#fff}
+.writing{font:26px/1.2 Caveat,cursive}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.err{color:var(--cherry);font-size:14px;font-weight:600;margin:6px 0 0}
+
+/* photos */
+.drop{display:flex;align-items:center;gap:14px;border-radius:18px;background:var(--rail);padding:16px;cursor:pointer;transition:background .2s}
+.drop:hover{background:var(--rail2)}.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.drop .ic{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none}
+.drop b{display:block;font-weight:600}.drop small{color:var(--soft);font-size:13.5px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.th{position:relative;width:76px;height:76px;border-radius:14px;overflow:hidden;background:var(--rail)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(90,22,34,.85);color:#fff;font-size:14px;line-height:1}
+
+/* calendar */
+.cal{background:var(--rail);border-radius:22px;padding:14px}
+.calh{display:flex;justify-content:space-between;align-items:center;margin:0 4px 10px}
+.calh b{font:20px "Young Serif",Georgia,serif;font-weight:400}
+.calh div{display:flex;gap:6px}
+.calh button{width:40px;height:40px;border:0;border-radius:50%;background:#fff;font-size:18px;transition:transform .15s,opacity .2s}
+.calh button:disabled{opacity:.35;cursor:default}.calh button:active:not(:disabled){transform:scale(.9)}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cg .wd{text-align:center;font-size:12px;font-weight:600;color:var(--mute);padding:2px 0 6px}
+.dy{aspect-ratio:1/1.05;border:0;border-radius:14px;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:600;font-size:16px;color:var(--mute);padding:0;transition:background .2s,color .2s,transform .15s}
+.dy small{font-size:10.5px;font-weight:600;line-height:1}
+.dy.ok{background:#fff;color:var(--ink)}.dy.ok small{color:var(--ok)}.dy.rush small{color:var(--warn)}
+.dy.ok:active{transform:scale(.92)}
+.dy.full{color:var(--mute);text-decoration:line-through}
+.dy[aria-pressed=true]{background:var(--acc);color:#fff}.dy[aria-pressed=true] small{color:#f6cdd6}
+.dy:disabled{cursor:default}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--soft);margin:12px 4px 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+.note{border-radius:16px;padding:12px 14px;font-size:14.5px;margin:12px 0 0}
+.note.warn{background:#fff3df;color:var(--warn)}.note.ok{background:#eaf5ef;color:#24513a}.note.soft{background:var(--rail);color:var(--soft)}
+.note b{color:inherit}
+
+/* review */
+.rv{border-radius:20px;background:var(--rail);padding:4px 16px;margin:0 0 12px}
+.rvh{display:flex;justify-content:space-between;align-items:center;padding:12px 0 4px}
+.rvh h3{font:18px "Young Serif",Georgia,serif}
+.rvh button{border:0;background:none;color:var(--cherry);font-weight:600;font-size:14px;padding:6px 0;min-height:36px}
+.rvr{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.rvr span{color:var(--soft)}.rvr b{font-weight:600;text-align:right}
+.ack{display:flex;gap:12px;align-items:flex-start;margin:16px 0 0;font-size:15px;cursor:pointer}
+.ack input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--acc);flex:none}
+
+/* side summary */
+.side{position:sticky;top:18px;display:grid;gap:14px}
+.box{background:var(--rail);border-radius:24px;padding:20px}
+.pv{display:grid;place-items:center;background:#fff;border-radius:18px;padding:14px 10px 6px;margin-bottom:14px}
+.pv svg{width:100%;max-width:240px;height:auto;display:block}
+.pvcap{font-size:12.5px;color:var(--soft);text-align:center;margin:4px 0 6px}
+.box h2{font:22px "Young Serif",Georgia,serif;margin:0 0 8px}
+.ln{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;padding:6px 0;border-top:1px solid var(--line)}
+.ln:first-of-type{border-top:0}.ln b{font-weight:600;font-variant-numeric:tabular-nums}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:6px;border-top:2px solid var(--ink)}
+.tot span{font-weight:600}.tot b{font:28px "Young Serif",Georgia,serif;font-weight:400;font-variant-numeric:tabular-nums}
+.sub2{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:14px;color:var(--soft)}
+.facts li{display:flex;gap:10px}.facts i{width:8px;height:8px;border-radius:50%;background:var(--cherry);flex:none;margin-top:7px}
+
+/* bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 -1px 0 var(--line)}
+.bar-in{max-width:1120px;margin:0 auto;padding:12px max(18px,4vw) calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px}
+.bt{flex:1}.bt span{display:block;font-size:12.5px;color:var(--soft)}.bt b{font:24px/1.1 "Young Serif",Georgia,serif;font-weight:400;font-variant-numeric:tabular-nums}
+.btn{border:0;border-radius:999px;min-height:52px;padding:0 26px;font-weight:700;font-size:16px;background:var(--acc);color:#fff;white-space:nowrap;transition:transform .15s var(--ez),filter .2s,opacity .2s}
+.btn:active{transform:scale(.96)}.btn:hover{filter:brightness(1.08)}
+.btn.soft{background:var(--rail2);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* done */
+.done{max-width:620px;margin:0 auto;padding:40px max(18px,4vw) 80px;text-align:center}
+.tick{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:var(--ok);display:grid;place-items:center}
+.done h1{font:clamp(32px,6vw,46px)/1.08 "Young Serif",Georgia,serif;margin:0 0 10px}
+.done .lede{margin:0 auto 26px;max-width:46ch}
+.ono{display:inline-block;background:var(--rail);border-radius:999px;padding:6px 16px;font-weight:700;font-size:14px;margin-bottom:24px;font-variant-numeric:tabular-nums}
+.next{text-align:left;display:grid;gap:10px;margin:0 0 26px}
+.nx{display:flex;gap:14px;background:var(--rail);border-radius:18px;padding:14px 16px}
+.nx b.n{flex:none;width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;font:16px "Young Serif",Georgia,serif;font-weight:400;color:var(--cherry)}
+.nx div b{display:block;font-weight:600}.nx div span{font-size:14px;color:var(--soft)}
+.paused{max-width:560px;margin:0 auto;padding:70px 24px;text-align:center}
+.paused h1{font:36px "Young Serif",Georgia,serif;margin:0 0 10px}.paused p{color:var(--soft)}
+.foot{max-width:1120px;margin:0 auto;padding:0 max(18px,4vw) 120px;font-size:13px;color:var(--mute)}
+
+@keyframes inR{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.pane.fr{animation:inR .45s var(--ez)}.pane.fl{animation:inL .45s var(--ez)}
+.done>*{animation:up .6s var(--ez) backwards}.done>*:nth-child(2){animation-delay:.08s}.done>*:nth-child(3){animation-delay:.14s}.done>*:nth-child(4){animation-delay:.2s}.done>*:nth-child(5){animation-delay:.26s}.done>*:nth-child(6){animation-delay:.32s}
+.tick{animation:pop .6s var(--ez) backwards!important}
+.bump{animation:bump .4s var(--ez)}
+.shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+@media(min-width:901px){.stepname{display:none}}
+@media(max-width:900px){
+ .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding-top:20px}
+ .side{display:none}
+ .steps button{font-size:0;gap:0;min-height:20px}
+ .stepname{display:block}
+}
+.stepname{font-size:13px;font-weight:600;color:var(--soft);margin-top:8px}
+.mpv{display:none}
+@media(max-width:900px){.mpv{display:flex;align-items:center;gap:14px;background:var(--rail);border-radius:18px;padding:10px 14px;margin:0 0 20px}.mpv svg{width:74px;height:auto;flex:none}.mpv b{display:block;font-weight:600;font-size:15px}.mpv span{font-size:13.5px;color:var(--soft)}}
+@media(max-width:520px){.g2{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.btn{padding:0 22px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <svg class="mark" viewBox="0 0 42 42" aria-hidden="true"><rect width="42" height="42" rx="13" fill="#fff"/><path d="M10 31h22v-8H10z" fill="#5a1622"/><path d="M13 23v-5h16v5" fill="none" stroke="#5a1622" stroke-width="2.4"/><path d="M10 27c3 2 5 2 7 0s4-2 7 0 5 2 8 0" fill="none" stroke="#fadadd" stroke-width="2"/><circle cx="21" cy="12" r="2.6" fill="#c0163f"/></svg>
+    <div class="brand"><b>My Favorite Baker</b><span>Custom cakes, pickup in Thornton</span></div>
+  </div>
+  <div class="prog" id="prog"></div>
+</header>
+<main id="app"></main>
+<div class="bar" id="bar"></div>
+<p class="foot" id="foot">This is a sample order form. Orders placed here show up on the demo order board in the same browser.</p>
+
+<script>
+{
+/* ---------- data ---------- */
+const TODAY='2026-11-23',HOL={'2026-11-26':'Thanksgiving'};
+const SIZES={mini:{n:'Mini 4"',p:75,k:'cake'},classic:{n:'Classic 6"',p:95,k:'cake'},twelve:{n:'12" round',p:150,k:'cake'},tier:{n:'2 tier 4"+6"',p:220,k:'cake'},sheet:{n:'Sheet cake',p:150,k:'cake'},cup:{n:'Cupcakes',p:50,doz:1,k:'cup'},floral:{n:'Floral cupcakes',p:75,doz:1,k:'cup'},minicup:{n:'Mini cupcakes',p:25,doz:1,k:'cup'},taste:{n:'Tasting box',p:40,k:'taste'},baby:{n:'Baby cake',p:25,k:'cake'}};
+const ADD={'Disco balls':15,'Fondant numbers':5,'Cherries':5,'Glitter cherries':10,'Bows':5,'Gold pearls':5,'Silver pearls':5,'White pearls':5,'Wafer butterflies':10,'Shimmer':5,'Edible photo print':15,'Fondant olive':5,'Mini cowboy hat':5,'Little buttercream hearts':5,'Ski figurines':20};
+const UP={'Gluten free vanilla':10,'Vegan vanilla':10};
+const FLAV=['Vanilla','Chocolate','Marble','Blueberry lemon','Raspberry lemon','Pumpkin spice','Gluten free vanilla','Vegan vanilla'];
+const FILL=['Salted caramel','Raspberry jam','Cookie butter'];
+const SW={pink:'#f2a1b4',red:'#c41e3a',white:'#ffffff',sage:'#a9b89b','butter yellow':'#f2df95',gold:'#cfa63b',black:'#1b1416',silver:'#bfc1c6',blue:'#8db4de',cream:'#f4e6cc',peach:'#f6bf9f',lavender:'#c8b4e2','chocolate brown':'#6a3f28'};
+const FC0={live:true,title:'Cake order form',thanks:'Thank you! Your order is in. Carlie will email your invoice within a day.',accent:'#5a1622',showPrices:true,showTotal:true,
+  lead:7,rushOn:true,rush:50,win:60,pay:2,deposit:100,days:[2,3,4,5],tierRule:true,tierDays:14,needIdea:false,rushWarn:true,
+  sizes:Object.fromEntries(Object.entries(SIZES).map(([k,v])=>[k,{on:true,p:v.p}])),flav:FLAV.map(n=>({n,on:true,up:UP[n]||0})),fill:FILL.map(n=>({n,on:true})),fillFee:5,
+  cols:Object.keys(SW).map(n=>({n,on:true})),incl:3,colFee:5,adds:Object.entries(ADD).map(([n,p])=>({n,p,on:true})),
+  q:{ig:{on:true,req:false,l:'Instagram'},pk:{on:true,l:'Who picks it up?'},shape:{on:true,l:'Shape'},frost:{on:true,l:'Buttercream'},text:{on:true,req:false,l:'Writing on the cake'},forWho:{on:true,req:false,l:'Who is it for?'},notes:{on:true,req:false,l:'Describe your cake'},allergies:{on:true,req:false,l:'Allergies'},photo:{on:true,req:false,l:'Inspiration photos'}},
+  custom:[{id:'c1',l:'How did you hear about us?',t:'choice',o:'Instagram, A friend, Google, Saw one at a party',req:false,on:true}]};
+
+/* ---------- shared state with the order board (same browser only, demo) ---------- */
+const KEY='mfb-book-v2',INBOX='mfb-inbox',DRAFT='mfb-order-draft';
+let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const merge=(a,b)=>{const o={...a};for(const k in b)o[k]=b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k])?merge(a[k],b[k]):b[k];return o};
+const F=S&&S.fc?merge(FC0,S.fc):FC0;
+let inbox=[];try{inbox=JSON.parse(localStorage.getItem(INBOX))||[]}catch(e){}
+const ORDERS=[...(S&&Array.isArray(S.orders)?S.orders:[]),...inbox];
+const CAP=S&&S.cap||3,CAPD=S&&S.capd||{},CLOSED=S&&S.closed||[],EXTRA=S&&S.extra||[];
+document.documentElement.style.setProperty('--acc',F.accent||'#5a1622');
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const D=s=>new Date(s+'T12:00:00');
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const add=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return iso(d)};
+const gap=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const wds=s=>D(s).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sz=()=>SIZES[O.size]||SIZES.classic;
+
+const dayInfo=d=>{
+  if(d<=TODAY)return{k:'past'};if(CLOSED.includes(d))return{k:'closed'};
+  const w=D(d).getDay(),reg=F.days.includes(w)&&!HOL[d];if(!reg&&!EXTRA.includes(d))return{k:'off'};
+  if(d>add(TODAY,F.win))return{k:'far'};
+  const g=gap(TODAY,d),rush=g<F.lead;if(rush&&!F.rushOn)return{k:'tooSoon'};
+  if(O.size==='tier'&&F.tierRule&&g<F.tierDays)return{k:'tier'};
+  const n=ORDERS.filter(o=>o.pickup===d).length,cap=CAPD[d]||CAP;if(n>=cap)return{k:'full'};
+  return{k:'ok',rush,left:cap-n}};
+
+/* ---------- order draft ---------- */
+const BLANK={size:'',qty:1,shape:'Round',flavor:'',filling:'',frosting:'Vanilla',colors:[],text:'',addons:[],forWho:'',notes:'',allergies:'',pickup:'',pk:'me',pkname:'',pkphone:'',name:'',email:'',phone:'',ig:'',cq:{},ack:false};
+let O={...BLANK};try{const d=JSON.parse(localStorage.getItem(DRAFT));if(d)O={...BLANK,...d}}catch(e){}
+let photos=[],step=0,calM=null,shown=0,errs={};
+const keep=()=>{try{localStorage.setItem(DRAFT,JSON.stringify(O))}catch(e){}};
+
+const STEPS=[['cake','Your cake'],['look','Flavor and look'],['extras','Make it yours'],['pickup','Pickup'],['you','Your details'],['review','Review']];
+const isCake=()=>sz().k==='cake',isCup=()=>sz().k==='cup',isTaste=()=>O.size==='taste';
+const visible=i=>!(STEPS[i][0]==='look'&&isTaste());
+
+/* ---------- price ---------- */
+const lines=()=>{if(!O.size)return[];const s=sz(),sp=+F.sizes[O.size].p,L=[[s.n+(s.doz?`, ${O.qty} dozen`:''),sp*(s.doz?O.qty:1)]];
+  if(!isTaste()){const f=F.flav.find(x=>x.n===O.flavor);if(f&&+f.up)L.push([O.flavor,+f.up]);
+    if(O.filling)L.push(['Filling: '+O.filling,+F.fillFee]);
+    const ex=Math.max(0,O.colors.length-F.incl);if(ex)L.push([ex+' extra color'+(ex>1?'s':''),ex*F.colFee])}
+  O.addons.forEach(a=>{const x=F.adds.find(y=>y.n===a);if(x)L.push([a,+x.p])});
+  if(O.pickup&&F.rushOn&&gap(TODAY,O.pickup)<F.lead)L.push(['Rush fee',+F.rush]);return L};
+const total=()=>lines().reduce((t,l)=>t+l[1],0);
+
+/* ---------- cake preview ---------- */
+const preview=(big)=>{const c1=SW[O.colors[0]]||'#f8efe6',c2=SW[O.colors[1]]||(O.colors[0]?'#fff':'#f1d6db'),c3=SW[O.colors[2]]||c2;
+  const txt=esc(O.text||(big?'Your words':'')),W=240,H=200,dots=n=>[...Array(n)].map((_,i)=>{const a=i/n*Math.PI*2;return[Math.cos(a),Math.sin(a)]});
+  const deco=O.addons.some(a=>/cherr/i.test(a))?dots(8).map(([x,y],i)=>`<circle cx="${120+x*62}" cy="${96+y*50}" r="6" fill="#c41e3a"/><path d="M${120+x*62} ${90+y*50}q3 -8 9 -10" stroke="#3d5a2a" stroke-width="1.6" fill="none"/>`).join(''):'';
+  const pearls=O.addons.some(a=>/pearl/i.test(a))?dots(22).map(([x,y])=>`<circle cx="${120+x*70}" cy="${96+y*58}" r="2.6" fill="${O.addons.find(a=>/gold/i.test(a))?'#cfa63b':'#fff'}" stroke="rgba(0,0,0,.1)"/>`).join(''):'';
+  const bows=O.addons.includes('Bows')?`<path d="M104 52l14 8-14 8zM136 52l-14 8 14 8z" fill="${c3==='#ffffff'?'#f2a1b4':c3}"/><circle cx="120" cy="60" r="4" fill="${c3==='#ffffff'?'#f2a1b4':c3}"/>`:'';
+  let body;
+  if(isCup()){const cs=[[70,110],[120,110],[170,110],[95,70],[145,70]];body=cs.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="28" fill="#e9d3c0"/><circle cx="${x}" cy="${y}" r="22" fill="${[c1,c2,c3][i%3]}" stroke="rgba(90,22,34,.12)"/><circle cx="${x}" cy="${y}" r="9" fill="${[c2,c3,c1][i%3]}" opacity=".9"/>`).join('');}
+  else if(isTaste()){body=[[60,70],[180,70],[60,140],[180,140]].map(([x,y],i)=>`<rect x="${x-46}" y="${y-30}" width="92" height="60" rx="12" fill="${['#f4e6cc','#6a3f28','#f2df95','#f2a1b4'][i]}"/>`).join('')+`<rect x="8" y="34" width="224" height="140" rx="18" fill="none" stroke="#5a1622" stroke-width="2"/>`;}
+  else{const heart=O.shape==='Heart'&&(O.size==='mini'||O.size==='classic'),sheet=O.size==='sheet',tier=O.size==='tier';
+    const shape=heart?`<path d="M120 170C62 128 40 104 40 76c0-22 17-38 38-38 18 0 32 10 42 26 10-16 24-26 42-26 21 0 38 16 38 38 0 28-22 52-80 94z" fill="${c1}" stroke="${c2}" stroke-width="7" stroke-dasharray="1 10" stroke-linecap="round"/>`
+      :sheet?`<rect x="22" y="40" width="196" height="120" rx="16" fill="${c1}" stroke="${c2}" stroke-width="7" stroke-dasharray="1 10" stroke-linecap="round"/>`
+      :`<ellipse cx="120" cy="96" rx="${tier?88:84}" ry="${tier?72:68}" fill="${c1}" stroke="${c2}" stroke-width="8" stroke-dasharray="1 11" stroke-linecap="round"/>${tier?`<ellipse cx="120" cy="96" rx="52" ry="42" fill="${c1}" stroke="${c3}" stroke-width="6" stroke-dasharray="1 9" stroke-linecap="round"/>`:''}`;
+    const heart2=0,dark=['#1b1416','#6a3f28','#c41e3a'].includes(c1);
+    body=shape+pearls+deco+bows+(txt?`<text x="120" y="${heart?100:104}" text-anchor="middle" font-family="Caveat,cursive" font-weight="600" font-size="${Math.max(15,(heart||O.size==='mini'?24:30)-Math.max(0,O.text.length-10)*1.2)}" fill="${dark?'#fff':O.text?'#5a1622':'#c9aab0'}">${txt}</text>`:'');}
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sketch of your cake">${body}</svg>`};
+
+/* ---------- steps ---------- */
+const opt=(on,attrs,inner)=>`<button type="button" class="chip" aria-pressed="${!!on}" ${attrs}>${inner}</button>`;
+const lab=(t,req,extra)=>`<div class="ql"><span>${t}${req?'<span class="rq" aria-hidden="true">*</span>':''}</span>${extra||''}</div>`;
+const er=k=>errs[k]?`<p class="err" role="alert">${esc(errs[k])}</p>`:'';
+const P=(v)=>F.showPrices?v:'';
+
+const V={
+cake:()=>`<h1>What are we baking?</h1><p class="lede">Pick a size. You can change anything before you send it.</p>
+  <div class="cards" id="q-size">${Object.entries(SIZES).filter(([k])=>F.sizes[k]&&F.sizes[k].on).map(([k,s])=>`<button type="button" class="card" aria-pressed="${O.size===k}" data-size="${k}"><b>${esc(s.n)}</b><span>${F.showPrices?money(F.sizes[k].p)+(s.doz?' a dozen':''):(s.doz?'By the dozen':'&nbsp;')}</span></button>`).join('')}</div>${er('size')}
+  ${O.size&&sz().doz?`<div class="q">${lab('How many dozen?')}<div class="qty"><button type="button" data-qty="-1" aria-label="One less dozen">&minus;</button><b>${O.qty} dozen</b><button type="button" data-qty="1" aria-label="One more dozen">+</button></div></div>`:''}
+  ${(O.size==='mini'||O.size==='classic')&&F.q.shape.on?`<div class="q">${lab(esc(F.q.shape.l))}<div class="chips">${['Round','Heart'].map(x=>opt(O.shape===x,`data-shape="${x}"`,x)).join('')}</div></div>`:''}
+  ${isTaste()?`<div class="note soft">The tasting box comes with 4 flavor pairs. Tell Carlie which ones you want on the next steps.</div>`:''}
+  ${O.size==='tier'&&F.tierRule?`<div class="note warn">Tiered cakes need at least <b>${F.tierDays} days</b> of notice.</div>`:''}`,
+look:()=>{const on=F.cols.filter(x=>x.on);return `<h1>Flavor and look</h1><p class="lede">Your sketch updates as you pick.</p>
+  <div class="q">${lab('Cake flavor',1)}<div class="chips" id="q-flavor">${F.flav.filter(x=>x.on).map(x=>opt(O.flavor===x.n,`data-flavor="${esc(x.n)}"`,`${esc(x.n)}${+x.up?`<small>${P('+'+money(x.up))}</small>`:''}`)).join('')}</div>${er('flavor')}</div>
+  ${F.fill.some(x=>x.on)&&!isCup()?`<div class="q">${lab('Filling',0,`<small>Optional${F.showPrices&&+F.fillFee?', +'+money(F.fillFee):''}</small>`)}<div class="chips">${opt(!O.filling,'data-filling=""','No filling')}${F.fill.filter(x=>x.on).map(x=>opt(O.filling===x.n,`data-filling="${esc(x.n)}"`,esc(x.n))).join('')}</div></div>`:''}
+  ${F.q.frost.on?`<div class="q">${lab(esc(F.q.frost.l))}<div class="chips">${['Vanilla','Chocolate'].map(x=>opt(O.frosting===x,`data-frost="${x}"`,x+' buttercream')).join('')}</div></div>`:''}
+  ${on.length?`<div class="q">${lab('Buttercream colors',0,`<span class="cnt${O.colors.length>F.incl?' over':''}" id="ccnt">${O.colors.length} picked, ${F.incl} included${F.showPrices&&+F.colFee?`, then ${money(F.colFee)} each`:''}</span>`)}<div class="chips">${on.map(x=>opt(O.colors.includes(x.n),`data-col="${esc(x.n)}"`,`<i class="sw" style="background:${SW[x.n]||'#ccc'}"></i>${esc(x.n)}`)).join('')}</div></div>`:''}`},
+extras:()=>{const Q=F.q;return `<h1>Make it yours</h1><p class="lede">The fun part. Describe it however you like, Carlie reads every word.</p>
+  ${Q.text.on&&!isTaste()?`<div class="q"><label class="fld"><span>${esc(Q.text.l)}${Q.text.req?'<span class="rq">*</span>':' <small>Optional</small>'}</span><input class="in writing${errs.text?' bad':''}" id="f-text" data-f="text" maxlength="40" value="${esc(O.text)}" placeholder="Happy birthday Sam" autocomplete="off"></label>${er('text')}</div>`:''}
+  ${F.adds.some(x=>x.on)?`<div class="q">${lab('Extras',0,'<small>Optional</small>')}<div class="chips">${F.adds.filter(x=>x.on).map(x=>opt(O.addons.includes(x.n),`data-addon="${esc(x.n)}"`,`${esc(x.n)}${F.showPrices?`<small>+${money(x.p)}</small>`:''}`)).join('')}</div></div>`:''}
+  ${Q.notes.on?`<div class="q"><label class="fld"><span>${esc(Q.notes.l)}${Q.notes.req||F.needIdea?'<span class="rq">*</span>':' <small>Optional</small>'}</span><textarea class="in${errs.notes?' bad':''}" data-f="notes" placeholder="Theme, colors, where things go, anything you've seen and loved">${esc(O.notes)}</textarea></label>${er('notes')}</div>`:''}
+  ${Q.photo.on?`<div class="q">${lab(esc(Q.photo.l),Q.photo.req)}<label class="drop"><input type="file" id="f-photo" accept="image/*" multiple><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg></span><span><b>Add photos</b><small>Screenshots from Instagram or Pinterest work great</small></span></label><div class="thumbs" id="thumbs">${photos.map((p,i)=>`<div class="th"><img src="${p.url}" alt="Inspiration photo ${i+1}"><button type="button" data-rmph="${i}" aria-label="Remove photo">&times;</button></div>`).join('')}</div>${er('photo')}</div>`:''}
+  <div class="g2" style="margin-top:22px">${Q.forWho.on?`<label class="fld"><span>${esc(Q.forWho.l)}${Q.forWho.req?'<span class="rq">*</span>':' <small>Optional</small>'}</span><input class="in${errs.forWho?' bad':''}" data-f="forWho" value="${esc(O.forWho)}" placeholder="My sister's 30th"></label>`:''}
+  ${Q.allergies.on?`<label class="fld"><span>${esc(Q.allergies.l)}${Q.allergies.req?'<span class="rq">*</span>':' <small>Optional</small>'}</span><input class="in${errs.allergies?' bad':''}" data-f="allergies" value="${esc(O.allergies)}" placeholder="None"></label>`:''}</div>${er('forWho')}${er('allergies')}`},
+pickup:()=>{const months=[];for(let m=0;m<3;m++){const d=D(TODAY);d.setDate(1);d.setMonth(d.getMonth()+m);months.push(iso(d).slice(0,7))}
+  if(calM===null)calM=O.pickup?Math.max(0,months.indexOf(O.pickup.slice(0,7))):0;
+  const mk=months[calM],first=D(mk+'-01'),start=-first.getDay(),nd=new Date(first.getFullYear(),first.getMonth()+1,0).getDate();
+  const cells=[];for(let i=start;i<nd;i++){if(i<0){cells.push('<span></span>');continue}const d=mk+'-'+String(i+1).padStart(2,'0'),x=dayInfo(d),ok=x.k==='ok';
+    cells.push(`<button type="button" class="dy${ok?' ok':''}${ok&&x.rush?' rush':''}${x.k==='full'?' full':''}" ${ok?`data-day="${d}"`:'disabled'} aria-pressed="${O.pickup===d}" aria-label="${wds(d)}${ok?(x.rush?', rush':', open'):x.k==='full'?', full':', not available'}">${i+1}${ok?`<small>${x.rush?(F.showPrices?'+'+money(F.rush):'rush'):x.left===1?'last spot':'open'}</small>`:x.k==='full'?'<small>full</small>':''}</button>`)}
+  const sel=O.pickup?dayInfo(O.pickup):null;
+  return `<h1>When should it be ready?</h1><p class="lede">Pickup is in Thornton, ${F.days.map(d=>['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join(', ')}. Carlie texts you an exact time.</p>
+  <div class="cal" id="q-pickup"><div class="calh"><b>${first.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</b><div><button type="button" data-cm="-1" aria-label="Previous month"${calM?'':' disabled'}>&#8249;</button><button type="button" data-cm="1" aria-label="Next month"${calM<2?'':' disabled'}>&#8250;</button></div></div>
+  <div class="cg">${['S','M','T','W','T','F','S'].map(x=>`<span class="wd">${x}</span>`).join('')}${cells.join('')}</div>
+  <div class="legend"><span><i style="background:#fff"></i>Open</span>${F.rushOn?`<span><i style="background:#fff3df"></i>Rush, under ${F.lead} days</span>`:''}<span><i style="background:var(--acc)"></i>Your day</span></div></div>${er('pickup')}
+  ${O.pickup?`<div class="note ${sel&&sel.rush?'warn':'ok'}"><b>${wds(O.pickup)}</b>${sel&&sel.rush&&F.rushWarn?`. That's under ${F.lead} days away, so a ${money(F.rush)} rush fee is added.`:'. Great, that day works.'}</div>`:''}
+  ${F.q.pk.on?`<div class="q">${lab(esc(F.q.pk.l))}<div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">${[['me','Me','I\'ll grab it'],['uber','An Uber driver','You book the ride'],['other','Someone else','A friend or family']].map(([k,t,s])=>`<button type="button" class="card" aria-pressed="${O.pk===k}" data-pk="${k}"><b>${t}</b><span>${s}</span></button>`).join('')}</div>
+   ${O.pk==='uber'?`<div class="note soft">Carlie hands the cake to your driver. Ask them to keep it flat and the AC on.</div>`:''}
+   ${O.pk==='other'?`<div class="g2" style="margin-top:12px"><label class="fld"><span>Their name</span><input class="in" data-f="pkname" value="${esc(O.pkname)}" autocomplete="off"></label><label class="fld"><span>Their phone</span><input class="in" data-f="pkphone" type="tel" inputmode="tel" value="${esc(O.pkphone)}"></label></div>`:''}</div>`:''}`},
+you:()=>`<h1>Where should Carlie reach you?</h1><p class="lede">Your invoice and pickup time go here. No spam, ever.</p>
+  <label class="fld"><span>Full name<span class="rq">*</span></span><input class="in${errs.name?' bad':''}" data-f="name" autocomplete="name" value="${esc(O.name)}"></label>${er('name')}
+  <div class="g2"><label class="fld"><span>Email<span class="rq">*</span></span><input class="in${errs.email?' bad':''}" data-f="email" type="email" inputmode="email" autocomplete="email" value="${esc(O.email)}"></label>
+  <label class="fld"><span>Phone<span class="rq">*</span></span><input class="in${errs.phone?' bad':''}" data-f="phone" type="tel" inputmode="tel" autocomplete="tel" value="${esc(O.phone)}"></label></div>${er('email')}${er('phone')}
+  ${F.q.ig.on?`<label class="fld"><span>${esc(F.q.ig.l)}${F.q.ig.req?'<span class="rq">*</span>':' <small>Optional</small>'}</span><input class="in${errs.ig?' bad':''}" data-f="ig" value="${esc(O.ig)}" placeholder="@yourname" autocapitalize="off"></label>${er('ig')}`:''}
+  ${F.custom.filter(c=>c.on&&c.l.trim()).map(c=>{const v=O.cq[c.id]||(c.t==='checks'?[]:''),k='cq_'+c.id,h=c.h?`<p class="hint">${esc(c.h)}</p>`:'';
+    if(['choice','checks','yesno'].includes(c.t)){const os=c.t==='yesno'?['Yes','No']:c.o.split(',').map(x=>x.trim()).filter(Boolean);return `<div class="q">${lab(esc(c.l),c.req,c.req?'':'<small>Optional</small>')}${h}<div class="chips">${os.map(x=>opt(c.t==='checks'?v.includes(x):v===x,`data-cq="${c.id}" data-cqv="${esc(x)}" data-cqm="${c.t==='checks'?1:0}"`,esc(x))).join('')}</div>${er(k)}</div>`}
+    return `<label class="fld" style="margin-top:14px"><span>${esc(c.l)}${c.req?'<span class="rq">*</span>':' <small>Optional</small>'}</span>${h}${c.t==='long'?`<textarea class="in" data-cqt="${c.id}">${esc(v)}</textarea>`:`<input class="in" data-cqt="${c.id}" type="${c.t==='date'?'date':'text'}" value="${esc(v)}">`}</label>${er(k)}`}).join('')}`,
+review:()=>{const s=sz(),L=lines(),T=total(),dep=F.deposit<100?Math.round(T*F.deposit/100):T;
+  const row=(k,v)=>v?`<div class="rvr"><span>${k}</span><b>${v}</b></div>`:'';
+  const sec=(t,i,body)=>`<div class="rv"><div class="rvh"><h3>${t}</h3><button type="button" data-go="${i}">Edit</button></div>${body}</div>`;
+  return `<h1>Look good?</h1><p class="lede">Check everything once. Nothing is charged now, Carlie emails your invoice first.</p>
+  ${sec('Your cake',0,row('Size',esc(s.n)+(s.doz?`, ${O.qty} dozen`:''))+row('Shape',(O.size==='mini'||O.size==='classic')?O.shape:''))}
+  ${isTaste()?'':sec('Flavor and look',1,row('Flavor',esc(O.flavor))+row('Filling',esc(O.filling)||'None')+row('Buttercream',esc(O.frosting))+row('Colors',O.colors.map(esc).join(', ')))}
+  ${sec('Details',2,row('Writing',O.text?`<span class="writing" style="font-size:22px">${esc(O.text)}</span>`:'')+row('Extras',O.addons.map(esc).join(', '))+row('For',esc(O.forWho))+row('Allergies',esc(O.allergies))+row('Photos',photos.length?photos.length+' added':'')+(O.notes?`<div class="rvr" style="display:block"><span>Your idea</span><p style="margin:4px 0 0">${esc(O.notes)}</p></div>`:''))}
+  ${sec('Pickup',3,row('Day',O.pickup?wds(O.pickup):'')+row('Picked up by',{me:'You',uber:'An Uber driver',other:esc(O.pkname)||'Someone else'}[O.pk]))}
+  ${sec('Contact',4,row('Name',esc(O.name))+row('Email',esc(O.email))+row('Phone',esc(O.phone))+row(esc(F.q.ig.l),esc(O.ig)))}
+  ${F.showTotal?`<div class="rv"><div class="rvh"><h3>Price</h3></div>${L.map(l=>row(esc(l[0]),money(l[1]))).join('')}<div class="tot"><span>Total</span><b>${money(T)}</b></div>${F.deposit<100?`<p class="sub2">Due to hold your date: <b>${money(dep)}</b> (${F.deposit}% deposit). The rest at pickup.</p>`:''}<div style="height:12px"></div></div>`:''}
+  <label class="ack"><input type="checkbox" id="ack"${O.ack?' checked':''}><span>I understand Carlie emails an invoice, and my date is held once I pay within ${F.pay} day${F.pay>1?'s':''}.</span></label>${er('ack')}`}
+};
+
+/* ---------- validation ---------- */
+const check=i=>{const e={},Q=F.q,k=STEPS[i][0];
+  if(k==='cake'&&!O.size)e.size='Pick a size to keep going.';
+  if(k==='look'&&!O.flavor)e.flavor='Pick a cake flavor.';
+  if(k==='extras'){if(Q.text.on&&Q.text.req&&!O.text.trim()&&!isTaste())e.text='Add the writing for your cake.';
+    if(Q.notes.on&&Q.notes.req&&!O.notes.trim())e.notes='Tell Carlie a little about your idea.';
+    if(F.needIdea&&!O.notes.trim()&&!photos.length)e.notes='Add a short description or a photo so Carlie knows what to make.';
+    if(Q.photo.on&&Q.photo.req&&!photos.length)e.photo='Add at least one photo.';
+    if(Q.forWho.on&&Q.forWho.req&&!O.forWho.trim())e.forWho='Who is the cake for?';
+    if(Q.allergies.on&&Q.allergies.req&&!O.allergies.trim())e.allergies='Add any allergies, or type None.'}
+  if(k==='pickup'){if(!O.pickup)e.pickup='Pick a pickup day.';else if(dayInfo(O.pickup).k!=='ok')e.pickup='That day is not available anymore. Pick another one.'}
+  if(k==='you'){if(!O.name.trim())e.name='Add your name.';if(!/^\S+@\S+\.\S+$/.test(O.email.trim()))e.email='Add an email that works.';if(O.phone.replace(/\D/g,'').length<10)e.phone='Add a 10 digit phone number.';
+    if(Q.ig.on&&Q.ig.req&&!O.ig.trim())e.ig='Add your Instagram.';
+    F.custom.filter(c=>c.on&&c.req&&c.l.trim()).forEach(c=>{const v=O.cq[c.id];if(!v||(Array.isArray(v)&&!v.length)||!String(v).trim())e['cq_'+c.id]='This one is required.'})}
+  if(k==='review'&&!O.ack)e.ack='Tick the box to send your order.';
+  return e};
+
+/* ---------- render ---------- */
+const renderProg=()=>{const vis=STEPS.map((s,i)=>[s,i]).filter(([,i])=>visible(i)),pos=vis.findIndex(([,i])=>i===step);
+  $('prog').innerHTML=`<div class="steps" style="grid-template-columns:repeat(${vis.length},1fr)">${vis.map(([s,i],n)=>`<button type="button" class="${i===step?'on':n<pos?'done':''}" ${n<=Math.max(pos,shown)?`data-go="${i}"`:'disabled'} aria-current="${i===step?'step':'false'}"><i></i>${s[1]}</button>`).join('')}</div><span class="stepname">Step ${pos+1} of ${vis.length}, ${STEPS[step][1]}</span>`};
+const sideHTML=()=>{const L=lines(),T=total();return `<div class="box"><div class="pv">${preview(true)}</div><p class="pvcap">A rough sketch. Carlie makes it beautiful.</p>
+  <h2>Your order</h2>${O.size?(F.showTotal?L.map(l=>`<div class="ln"><span>${esc(l[0])}</span><b>${money(l[1])}</b></div>`).join('')+`<div class="tot"><span>Total</span><b>${money(T)}</b></div>`:`<p class="sub2">${esc(sz().n)}. Carlie emails your total.</p>`):'<p class="sub2">Pick a size to start.</p>'}
+  ${O.pickup?`<p class="sub2">Pickup ${wds(O.pickup)}</p>`:''}</div>
+  <div class="box"><ul class="facts"><li><i></i>Pickup only in Thornton. No delivery, but an Uber driver can grab it.</li><li><i></i>Order ${F.lead} days ahead${F.rushOn?`, or add a ${money(F.rush)} rush fee`:''}.</li><li><i></i>Pay your invoice within ${F.pay} day${F.pay>1?'s':''} to hold your date.</li></ul></div>`};
+const renderBar=()=>{const last=step===5,first=STEPS.findIndex((s,i)=>visible(i))===step;
+  $('bar').innerHTML=`<div class="bar-in"><div class="bt">${F.showTotal&&O.size?`<span>Total so far</span><b id="btot">${money(total())}</b>`:`<span>${STEPS[step][1]}</span>`}</div>${first?'':'<button type="button" class="btn soft" id="back">Back</button>'}<button type="button" class="btn" id="next">${last?'Send my order':'Next'}</button></div>`};
+const refreshLive=()=>{const s=$('side');if(s)s.innerHTML=sideHTML();const m=$('mpv');if(m)m.innerHTML=mpv();const b=$('btot');if(b){const v=money(total());if(b.textContent!==v){b.textContent=v;b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}}};
+const mpv=()=>`${preview(false)}<div><b>${O.size?esc(sz().n):'Your cake'}${O.flavor&&!isTaste()?', '+esc(O.flavor.toLowerCase()):''}</b><span>${O.colors.length?O.colors.map(esc).join(', '):'Pick colors to see them here'}</span></div>`;
+const render=(dir)=>{if(!F.live){$('app').innerHTML=`<div class="paused"><h1>Taking a little break</h1><p>Carlie isn't taking new orders right now. Check back soon, or send a DM on Instagram.</p></div>`;$('bar').hidden=true;$('prog').hidden=true;return}
+  $('app').innerHTML=`<div class="wrap"><section class="stage"><div class="pane${dir>0?' fr':dir<0?' fl':''}" id="pane">${['look','extras'].includes(STEPS[step][0])?`<div class="mpv" id="mpv">${mpv()}</div>`:''}${V[STEPS[step][0]]()}</div></section><aside class="side" id="side">${sideHTML()}</aside></div>`;
+  renderProg();renderBar()};
+const go=(i,dir)=>{step=i;shown=Math.max(shown,i);errs={};render(dir);window.scrollTo({top:0,behavior:RM()?'auto':'smooth'})};
+const nextVis=(i,d)=>{let j=i+d;while(j>=0&&j<STEPS.length&&!visible(j))j+=d;return j};
+
+/* ---------- submit ---------- */
+const send=()=>{const s=sz(),id='w'+Date.now(),T=total();
+  const fx={sz:Object.fromEntries(Object.entries(F.sizes).map(([k,v])=>[k,+v.p])),up:Object.fromEntries(F.flav.map(x=>[x.n,+x.up||0])),add:Object.fromEntries(F.adds.map(x=>[x.n,+x.p||0])),fill:+F.fillFee,incl:+F.incl,col:+F.colFee,rush:F.rushOn?+F.rush:0,lead:+F.lead};
+  const extra=F.custom.filter(c=>c.on&&c.l.trim()).map(c=>[c.l,[].concat(O.cq[c.id]||[]).join(', ')]).filter(x=>x[1]);
+  const o={id,time:'',name:O.name.trim(),email:O.email.trim(),phone:O.phone.trim(),ig:O.ig.trim(),pickup:O.pickup,size:O.size,qty:s.doz?O.qty:1,shape:s.k==='cake'?(O.size==='sheet'?'Sheet':(O.size==='mini'||O.size==='classic')?O.shape:'Round'):'',
+    flavor:isTaste()?'':O.flavor,filling:isTaste()||isCup()?'':O.filling,frosting:isTaste()?'':O.frosting,colors:isTaste()?[]:O.colors,text:O.text.trim(),addons:O.addons,placed:TODAY,status:'new',invoicedOn:'',
+    picker:{type:O.pk,name:O.pkname,phone:O.pkphone},forWho:O.forWho.trim()||'Not given',allergies:O.allergies.trim()||'None',notes:O.notes.trim(),photo:photos.length>0,hon:'',bday:false,extra,fx,via:'web'};
+  try{const ib=JSON.parse(localStorage.getItem(INBOX)||'[]');ib.push(o);localStorage.setItem(INBOX,JSON.stringify(ib));localStorage.removeItem(DRAFT)}catch(e){}
+  const no='MFB-'+id.slice(-5),dep=F.deposit<100?Math.round(T*F.deposit/100):T;
+  $('prog').hidden=true;$('bar').hidden=true;
+  $('app').innerHTML=`<div class="done"><div class="tick"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+   <h1>Your order is in, ${esc(O.name.trim().split(' ')[0])}!</h1><p class="lede">${esc(F.thanks)}</p><span class="ono">Order ${no}</span>
+   <div class="pv" style="max-width:300px;margin:0 auto 26px">${preview(false)}</div>
+   <div class="next">${[['Watch your email','Your invoice goes to '+esc(O.email.trim())+(F.showTotal?`, for ${money(dep)}${F.deposit<100?' deposit':''}.`:'.')],['Pay within '+F.pay+' day'+(F.pay>1?'s':''),'That locks in '+wds(O.pickup)+' for you.'],['Get your pickup time','Carlie texts '+esc(O.phone.trim())+' the day before.']].map(([t,s],i)=>`<div class="nx"><b class="n">${i+1}</b><div><b>${t}</b><span>${s}</span></div></div>`).join('')}</div>
+   <button type="button" class="btn soft" id="again">Order another cake</button></div>`;
+  window.scrollTo(0,0);photos=[];O={...BLANK}};
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+  const d=t.dataset;
+  if(t.id==='next'){const x=check(step);if(Object.keys(x).length){errs=x;render(0);const f=document.querySelector('.err');f&&f.scrollIntoView({behavior:RM()?'auto':'smooth',block:'center'});$('next').classList.add('shake');return}
+    if(step===5){send();return}go(nextVis(step,1),1);return}
+  if(t.id==='back'){go(nextVis(step,-1),-1);return}
+  if(t.id==='again'){step=0;shown=0;calM=null;$('prog').hidden=false;$('bar').hidden=false;render(0);return}
+  if(d.go!=null){const i=+d.go;go(i,i>step?1:-1);return}
+  let ch=false;
+  if(d.size){O.size=d.size;if(!SIZES[O.size].doz)O.qty=1;if(O.pickup&&dayInfo(O.pickup).k!=='ok')O.pickup='';ch=true}
+  if(d.qty){O.qty=Math.min(12,Math.max(1,O.qty+ +d.qty));ch=true}
+  if(d.shape){O.shape=d.shape;ch=true}
+  if(d.flavor){O.flavor=d.flavor;ch=true}
+  if(d.filling!=null){O.filling=d.filling;ch=true}
+  if(d.frost){O.frosting=d.frost;ch=true}
+  if(d.col){const c=d.col;O.colors=O.colors.includes(c)?O.colors.filter(x=>x!==c):[...O.colors,c];ch=true}
+  if(d.addon){const a=d.addon;O.addons=O.addons.includes(a)?O.addons.filter(x=>x!==a):[...O.addons,a];ch=true}
+  if(d.day){O.pickup=d.day;ch=true}
+  if(d.cm){calM=Math.min(2,Math.max(0,calM+ +d.cm));ch=true}
+  if(d.pk){O.pk=d.pk;ch=true}
+  if(d.cq){const v=d.cqv;if(d.cqm==='1'){const L=O.cq[d.cq]||[];O.cq[d.cq]=L.includes(v)?L.filter(x=>x!==v):[...L,v]}else O.cq[d.cq]=O.cq[d.cq]===v?'':v;ch=true}
+  if(d.rmph!=null){URL.revokeObjectURL(photos[+d.rmph].url);photos.splice(+d.rmph,1);ch=true}
+  if(ch){keep();errs={};const y=window.scrollY,cal=d.day||d.cm;const pane=$('pane'),h=pane.innerHTML;
+    pane.innerHTML=(['look','extras'].includes(STEPS[step][0])?`<div class="mpv" id="mpv">${mpv()}</div>`:'')+V[STEPS[step][0]]();renderProg();renderBar();refreshLive();window.scrollTo(0,y);
+    if(cal&&d.cm&&!RM()){const g=document.querySelector('.cg');g&&g.animate([{opacity:0,transform:`translateX(${d.cm>0?20:-20}px)`},{opacity:1,transform:'none'}],{duration:350,easing:'cubic-bezier(.22,1,.36,1)'})}}
+});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.f){O[t.dataset.f]=t.value;t.classList.remove('bad');keep();if(t.dataset.f==='text'){refreshLive()}return}
+  if(t.dataset.cqt){O.cq[t.dataset.cqt]=t.value;keep();return}});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='ack'){O.ack=t.checked;keep();return}
+  if(t.id==='f-photo'){[...t.files].slice(0,6-photos.length).forEach(f=>photos.push({name:f.name,url:URL.createObjectURL(f)}));t.value='';
+    $('thumbs').innerHTML=photos.map((p,i)=>`<div class="th"><img src="${p.url}" alt="Inspiration photo ${i+1}"><button type="button" data-rmph="${i}" aria-label="Remove photo">&times;</button></div>`).join('')}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input.in')){e.preventDefault();$('next')?.click()}});
+
+render(0);
+}
+</script>
+</body>
+</html>

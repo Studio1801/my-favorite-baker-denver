@@ -1169,7 +1169,7 @@ const renderForm=()=>{const f=S.fc,v=$('v-form');
   <p class="mobhint">You're editing. Tap <b>Customer view</b> above to see the form the way customers will.</p>
   <div class="dbar" id="dbar" hidden></div>
   <div class="fbw ${fmode}">${fmode==='build'?`<section class="fb" id="fbld">${builderHTML()}</section>`:''}
-   <div class="pvf"><div class="pvbar"><span class="pvurl">myfavoritebaker.com/order</span><span class="pvst" id="pvlive"></span></div><div class="fpv" id="fpv"></div></div></div>`;
+   <div class="pvf"><div class="pvbar"><a class="pvurl" href="/order" target="_blank" rel="noopener">${location.host}/order &#8599;</a><span class="pvst" id="pvlive"></span></div><div class="fpv" id="fpv"></div></div></div>`;
   renderPreview()};
 const draft=()=>{const f=$('oform');if(!f)return null;const fd=new FormData(f),g=k=>String(fd.get(k)||'').trim(),size=g('size')||'classic',s=SIZES[size],cake=size!=='taste';
   const extra=S.fc.custom.filter(c=>c.on&&c.l.trim()).map(c=>[c.l,(c.t==='checks'?fd.getAll('cq_'+c.id):[g('cq_'+c.id)]).filter(Boolean).join(', ')]).filter(x=>x[1]);
@@ -1307,7 +1307,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(t.id==='fpuby'){const prev=JSON.parse(JSON.stringify(S.fc)),{L}=fdiff(S.fc,S.fcd);S.fc={...S.fcd,live:S.fc.live};S.fcd=null;S.fch.unshift({at:new Date().toISOString(),n:L.length,sum:L,prev});S.fch=S.fch.slice(0,10);save();closePop();render();
     toast(`${L.length} change${L.length>1?'s':''} published. New orders use them from now on.`,()=>{S.fc=prev;S.fch.shift();save();render()});return}
   if(t.dataset.fcrest){const h=S.fch[+t.dataset.fcrest];S.fcd=JSON.parse(JSON.stringify(h.prev));clean();save();btab='q';render();toast(S.fcd?'Old version loaded as a draft. Review it, then publish.':'That version matches what is live now.');return}
-  if(t.id==='flink'){const ok=await copy('https://myfavoritebaker.com/order');toast(ok?'Form link copied. Put it in your Instagram bio.':'Your link: myfavoritebaker.com/order');return}
+  if(t.id==='flink'){const ok=await copy(location.origin+'/order');toast(ok?'Form link copied. Put it in your Instagram bio.':'Your link: '+location.origin+'/order');return}
   if(t.dataset.fm){fm=t.dataset.fm;fw=null;fAnim=true;render();if(fm!==TODAY.slice(0,7)){const NW=innerWidth<640?8:16,w0=add(mon(TODAY),-(NW-3)*7);for(let i=0;i<NW;i++){const s=add(w0,7*i);if(s.slice(0,7)===fm){fw=i;break}}render()}return}
   if(t.dataset.goal){const was=mStat(fm).all>=S.goal;S.goal=Math.max(250,S.goal+ +t.dataset.goal);save();render();if(!was&&mStat(fm).all>=S.goal)sprinkle(document.querySelector('.gring'),40);return}
   if(t.dataset.fmet){fmet=t.dataset.fmet;render();return}
@@ -1405,6 +1405,10 @@ const subm=e=>{const o=draft(),err=$('ferr'),fd=new FormData(e.target),f=S.fc,Q=
   land(o);toast(f.thanks+(S.fcd?' (Test order using your unpublished draft.)':''))};
 window.addEventListener('hashchange',route);
 route();
+const FORM_URL=location.origin+'/order';
+const pullInbox=()=>{let ib=[];try{ib=JSON.parse(localStorage.getItem('mfb-inbox')||'[]')}catch(e){}if(!ib.length)return;try{localStorage.removeItem('mfb-inbox')}catch(e){}
+  ib.filter(o=>o&&o.id&&!S.orders.some(x=>x.id===o.id)).forEach((o,i)=>setTimeout(()=>{land(o);toast(`New order from ${first(o)} for ${wds(o.pickup)}, ${money(total(o))}.`)},i*900))};
+pullInbox();addEventListener('storage',e=>{if(e.key==='mfb-inbox'&&e.newValue)pullInbox()});addEventListener('focus',pullInbox);
 }
 </script>
 </body>
