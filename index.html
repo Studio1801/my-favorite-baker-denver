@@ -569,6 +569,7 @@ html{-webkit-tap-highlight-color:transparent}
  .wsvg .ax{font-size:14px}.wsvg .vl{font-size:15px}.psvg .pax{font-size:13px}.psvg .pgl,.psvg .ptl{font-size:13px}.psvg .pv1{font-size:19px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 #scrim{z-index:60}#drawer{z-index:61}#pwrap{z-index:70}#toast{z-index:80}
+#board:not(.zoom) .day{cursor:zoom-in;transition:box-shadow .25s ease,transform .25s cubic-bezier(.22,1,.36,1)}@media(hover:hover){#board:not(.zoom) .day:hover{box-shadow:inset 0 0 0 2px var(--line)}}
 </style>
 </head>
 <body>
@@ -737,7 +738,7 @@ const renderWeek=()=>{const days=zd?[zd]:[0,1,2,3].map(i=>add(WEEKS[wk],i)),wo=S
   $('board').innerHTML=days.map(d=>{const s=dayState(d),os=S.orders.filter(o=>o.pickup===d).sort(byTime);
     const lab=s.k==='hol'?'Closed for Thanksgiving':s.k==='closed'?'Closed, hidden on your form':s.k==='full'?'Full':s.k==='open'?`${s.left} of ${s.c} spots open`:'';
     const tog=s.k==='closed'?`<button type="button" class="lk" data-shut="${d}">Reopen</button>`:s.k==='open'||s.k==='full'?`<button type="button" class="lk" data-shut="${d}">Close day</button>`:'';
-    return `<section class="day${s.k==='hol'||s.k==='closed'?' shut':''}"><div class="dh"><div class="top"><h3>${wd(d)}</h3>${zd?'':`<button type="button" class="zl" data-zoom="${d}" aria-label="Open ${wd(d)}">Open day &#8250;</button>`}</div><p><span>${md(d)}${lab?', '+lab.toLowerCase():''}</span>${tog}</p></div>
+    return `<section data-dayz="${d}" title="Open ${wd(d)}" class="day${s.k==='hol'||s.k==='closed'?' shut':''}"><div class="dh"><div class="top"><h3>${wd(d)}</h3></div><p><span>${md(d)}${lab?', '+lab.toLowerCase():''}</span>${tog}</p></div>
     ${os.map(card).join('')}${!os.length&&s.k!=='hol'&&s.k!=='closed'?'<p class="note">Nothing yet. Still open on your form.</p>':''}</section>`}).join('');
   $('flow').innerHTML=ORD.map(k=>`<button type="button" class="fs s-${k}" data-sf="${k}" aria-pressed="${sf===k}"><b>${wo.filter(o=>o.status===k).length}</b><span>${ST[k]}</span><small>${SH[k]}</small></button>`).join('');
   renderNeeds();
@@ -804,7 +805,7 @@ const zoomTo=(d,src)=>{const r=src&&src.getBoundingClientRect(),sy=window.scroll
   const el=$('dayv');if(RM()||!r||!el.animate)return;const R=el.getBoundingClientRect(),T=Math.max(0,r.top+sy-R.top),L=Math.max(0,r.left-R.left),Rt=Math.max(0,R.right-r.right),B=Math.max(0,R.bottom-(r.bottom+sy));
   el.animate([{clipPath:`inset(${T}px ${Rt}px ${B}px ${L}px round 18px)`},{clipPath:'inset(0px 0px 0px 0px round 24px)'}],{duration:680,easing:EZ});
   $('title').animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:460,delay:80,easing:EZ,fill:'backwards'});stag(0,22,220)};
-const zoomOut=()=>{const d=zd;zd=null;render();if(RM()||!document.body.animate)return;const days=[...document.querySelectorAll('#board .day')],idx=days.findIndex(x=>x.querySelector(`[data-zoom="${d}"]`));
+const zoomOut=()=>{const d=zd;zd=null;render();if(RM()||!document.body.animate)return;const days=[...document.querySelectorAll('#board .day')],idx=days.findIndex(x=>x.dataset.dayz===d);
   days.forEach((x,i)=>x.animate(i===idx?[{transform:'scale(1.08)',opacity:.3},{transform:'none',opacity:1}]:[{opacity:0,transform:`translateX(${(i-idx)*28}px)`},{opacity:1,transform:'none'}],{duration:560,delay:i===idx?0:90+Math.abs(i-idx)*60,easing:EZ,fill:'backwards'}));
   ['flow','needs'].forEach((id,i)=>$(id).animate([{opacity:0},{opacity:1}],{duration:400,delay:200+i*80,fill:'backwards'}))};
 
@@ -1272,7 +1273,7 @@ const autoRun=o=>{if(!S.auto.inv)return;setTimeout(()=>{if(o.status!=='new')retu
 const land=o=>{S.orders.push(o);last=o.id;zd=null;save();autoRun(o);wk=Math.max(0,WEEKS.findIndex(w=>o.pickup>=w&&o.pickup<=add(w,3)));
   if(cur!=='week')location.hash='week';else render();setTimeout(()=>{last=null},900);setTimeout(()=>document.querySelector(`[data-open="${o.id}"]`)?.scrollIntoView({block:'center',behavior:'smooth'}),60)};
 
-document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],a[href^="mailto"]'))return;const wkEl=e.target.closest('[data-wk]');if(wkEl){fw=+wkEl.dataset.wk;renderMoney();return}const t=e.target.closest('button,[data-open]');
+document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],a[href^="mailto"]'))return;{const dz=e.target.closest('[data-dayz]');if(dz&&!zd&&cur==='week'&&!e.target.closest('button,[data-open],a')){zoomTo(dz.dataset.dayz,dz);return}}const wkEl=e.target.closest('[data-wk]');if(wkEl){fw=+wkEl.dataset.wk;renderMoney();return}const t=e.target.closest('button,[data-open]');
   if(e.target.id==='scrim'){closeD();return}
   if(e.target.classList.contains('pback')){closePop();return}
   if(!t)return;
