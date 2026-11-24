@@ -202,6 +202,23 @@ textarea.in{min-height:120px;resize:vertical;line-height:1.45}
 .mpv b{display:block;font-weight:600;font-size:15px}.mpv span{font-size:13.5px;color:var(--soft)}
 @media(max-width:520px){.g2{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.notes{padding:24px 20px 18px;transform:rotate(.8deg)}.ig span{display:none}.sech{gap:12px}.num{width:38px;height:38px;font-size:17px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.nlead{margin:-4px 0 14px;font-size:14.5px;color:var(--soft)}
+.ngs{display:grid;gap:8px}
+.ng{background:var(--rail);border-radius:18px;overflow:hidden;transition:background .25s}
+.ng[open]{background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)}
+.ng summary{list-style:none;display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;min-height:48px}
+.ng summary::-webkit-details-marker{display:none}
+.ng summary svg{width:30px;height:30px;padding:6px;border-radius:50%;background:#fff;color:var(--cherry);flex:none}
+.ng[open] summary svg{background:var(--band)}
+.ng summary b{flex:1;font-weight:600;font-size:15px}
+.ng summary em{font-style:normal;font-size:12px;font-weight:700;color:var(--soft);background:#fff;border-radius:999px;padding:2px 9px;transition:transform .3s var(--ez)}
+.ng summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg) translateY(-2px);transition:transform .3s var(--ez);margin-right:4px}
+.ng[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+.ng ul{list-style:none;margin:0;padding:0 16px 14px 54px;display:grid;gap:9px;font-size:14.5px;line-height:1.45;color:var(--soft);animation:up .4s var(--ez)}
+.ng li{position:relative}.ng li::before{content:"";position:absolute;left:-14px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--cherry)}
+.ng li b{color:var(--ink);font-weight:600}.ng a{color:var(--cherry);font-weight:600;word-break:break-all}
+.notes{max-height:none}
+.notes .ng li{display:block}.notes .ng ul{display:grid}.sign{font-size:28px}
 </style>
 </head>
 <body>
@@ -414,12 +431,14 @@ const renderBar=()=>{$('bar').innerHTML=`<div class="bar-in"><div class="bt">${F
 const NI={pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',car:'<path d="M5 16l1.5-5a2 2 0 012-1.4h7a2 2 0 012 1.4L19 16"/><rect x="3" y="16" width="18" height="4" rx="1.5"/><circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/>'};
 const ni=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NI[k]}</svg>`;
 const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],dr=F.days.length&&F.days.every((d,i)=>i===0||d===F.days[i-1]+1)&&F.days.length>2?`${DN[F.days[0]]} to ${DN[F.days[F.days.length-1]]}`:F.days.map(d=>DN[d]).join(', ');
-$('notes').innerHTML=`<h2>A few notes from me</h2><ul>
-  <li>${ni('pin')}<span><b>Pickup only, in Thornton.</b> ${dr}, 8am to 1:30pm. I'll send the address with your confirmation.</span></li>
-  <li>${ni('car')}<span><b>No delivery,</b> but you're welcome to send an Uber driver to grab it.</span></li>
-  <li>${ni('clock')}<span><b>Please order ${F.lead} days ahead.</b> ${F.rushOn?`Need it sooner? There's a $${F.rush} rush fee if I have room.`:`I'm not able to take rush orders right now.`}</span></li>
-  <li>${ni('cal')}<span><b>Book up to ${Math.round(F.win/30)} months out.</b> Full days drop off the calendar on their own.</span></li>
-  <li>${ni('mail')}<span><b>I'll email your invoice.</b> Pay within ${F.pay} day${F.pay>1?'s':''} to hold your date.</span></li></ul><p class="sign">xo, Carlie</p>`;
+const NG=[['pin','Pickup',[['Home baker in Thornton,','about 25 minutes outside Denver. I send the address the day before pickup.'],[`${dr}, 8am to 1:30pm.`,'I reach out the day before to set a time that works for both of us.'],['Please don\'t be late.','I work two full time jobs and plan my day around your pickup. If you\'re running late, just message me.'],['Someone else picking up?','I need their name and phone number so I can coordinate with them.']]],
+ ['car','Delivery and travel',[['No delivery,','but you can book an Uber driver to grab it.'],['Once it leaves my hands,','it\'s not my liability. If it\'s dropped or damaged, I can\'t fix it.'],['Keep car rides under 2 hours,','especially in summer. Buttercream softens fast and can melt off.'],['Fridge friendly.','Cakes keep in the fridge up to 4 days after pickup.']]],
+ ['clock','Booking',[[`Order at least ${F.lead} days ahead.`,F.rushOn?`Anything sooner has a $${F.rush} rush fee.`:'I can\'t take rush orders right now.'],['Book no more than 2 months out.','Need a cake June 1? The soonest you can order is April 1.'],['Date not showing?','That means I\'m fully booked that day.']]],
+ ['mail','Ordering and payment',[['Be 100% sure before ordering.','Flavors, fillings, colors and design all go on this form. Need creative help? DM me first.'],['Please don\'t email add-ons later.','Everything needs to be on the form.'],['I\'ll email your invoice','with a payment link. It may take a few days since I work full time.'],[`Pay in full within ${F.pay} day${F.pay>1?'s':''}`,'to get on my books. Not ready to pay yet? Please wait to order.'],['The flavors below','are the only ones I\'m offering right now.']]],
+ ['gift','Gender reveal cakes',[['Email me the gender','at <a href="mailto:myfavoritebakerdenver@gmail.com">myfavoritebakerdenver@gmail.com</a>. I need it before I can accept your order.'],['Still waiting on bloodwork?','Please wait to order until you have the results.']]]];
+NI.gift='<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1.5S10 9 12 9c2 0 6 1 6-1.5S14 5 12 9z"/>';
+$('notes').innerHTML=`<h2>A few notes from me</h2><p class="nlead">My name is Carlie! Please read these before you order. I know it's a lot, I just want this to be smooth and easy for both of us.</p>
+  <div class="ngs">${NG.map(([ic,t,L],i)=>`<details class="ng"${i===0?' open':''}><summary>${ni(ic)}<b>${t}</b><em>${L.length}</em></summary><ul>${L.map(([a,b])=>`<li><b>${a}</b> ${b}</li>`).join('')}</ul></details>`).join('')}</div><p class="sign">Thank you so much! xo, Carlie</p>`;
 const renderAll=()=>{if(!F.live){$('app').innerHTML=`<div class="paused"><h1>Taking a little break</h1><p>Carlie isn't taking new orders right now. Check back soon, or send a DM on Instagram.</p></div>`;$('bar').hidden=true;$('nav').hidden=true;return}
   $('app').innerHTML=`<div class="wrap"><div class="stage">${STEPS.map((s,i)=>visible(i)?secHTML(i):'').join('')}</div><aside class="side" id="side">${sideHTML()}</aside></div>`;
   $('nav').innerHTML=navHTML();renderBar();observe()};
