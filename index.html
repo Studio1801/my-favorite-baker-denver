@@ -496,7 +496,8 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 #mailh small{font:600 12px var(--sans,inherit);color:var(--soft);margin-left:4px}
 .artth{display:block;width:100%;max-width:150px;aspect-ratio:6/5;object-fit:contain;background:#fff;border-radius:12px;margin:6px 0 2px;box-shadow:0 0 0 1px var(--line)}
 .artf{margin:16px 0 4px;background:var(--rail);border-radius:20px;padding:10px}.artf img{display:block;width:100%;border-radius:14px;background:#fff}.artf figcaption{font-size:13px;color:var(--soft);padding:8px 4px 2px}.artf figcaption b{display:block;color:var(--ink);font-size:14.5px}.artf a{color:var(--cherry);font-weight:600}
-.mdia{display:grid;gap:12px;margin-top:14px}.mload{border-radius:18px;background:var(--rail);padding:28px;text-align:center;color:var(--soft);font-size:14px}
+.mdia{display:grid;gap:12px;margin-top:14px}.mbody{display:grid;gap:12px}
+.mtog{display:flex;align-items:center;gap:10px;width:100%;border:0;background:var(--rail);border-radius:16px;padding:12px 16px;text-align:left;color:var(--ink)}.mtog span{flex:1;display:flex;flex-direction:column}.mtog b{font-size:15px}.mtog small{font-size:12.5px;color:var(--soft)}.mtog[aria-expanded=true] .chev{transform:rotate(-135deg)}.mload{border-radius:18px;background:var(--rail);padding:28px;text-align:center;color:var(--soft);font-size:14px}
 .artf{margin:0}.zbtn{display:block;width:100%;border:0;padding:0;background:#fff;border-radius:14px;position:relative;cursor:zoom-in;overflow:hidden}.zbtn img{display:block;width:100%}.zh{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--ink)}
 .phs b{display:block;font-size:14.5px;margin:0 0 8px}.phs small{color:var(--soft);font-weight:600;margin-left:4px}.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ph{border:0;padding:0;border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--rail);cursor:zoom-in}.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s cubic-bezier(.22,1,.36,1)}.ph:hover img{transform:scale(1.05)}
@@ -848,7 +849,8 @@ const mediaHTML=o=>{const F=esc(first(o)),m=mediaOf(o),aN=o.artN||(SA[o.id]&&SA[
   const want=o.photoN||0,got=m.photos.length,warn=(o.artN&&!m.artFull)||got<want?`<p class="mwarn">${got<want?`${want-got} of ${want} photo${want>1?'s':''}`:'The design'} could not be loaded on this device. Open the order on the computer it was placed from, or ask ${F} to resend.</p>`:'';
   const art=m.artFull?`<figure class="artf"><button type="button" class="zbtn" data-zoom="art" aria-label="Zoom in on ${F}'s design"><img src="${m.artFull}" alt="${F}'s painted cake design"><span class="zh">Tap to zoom</span></button><figcaption><b>${F}'s design</b>Painted on the order form${aN?`, ${aN} decoration${aN>1?'s':''}`:''}${o.via==='web'?'':' (sample)'}. <a href="${m.artFull}" download="${esc(o.name).replace(/\s+/g,'-')}-design.png">Save image</a></figcaption></figure>`:'';
   const ph=got?`<div class="phs"><b>Inspiration photos <small>${got}</small></b><div class="phg">${m.photos.map((p,i)=>`<button type="button" class="ph" data-zoom="p${i}" aria-label="View photo ${i+1} full size"><img src="${p.url}" alt="Inspiration photo ${i+1}${p.name?': '+esc(p.name):''}" loading="lazy"></button>`).join('')}</div></div>`:o.photo&&!o.media&&!o.photos?`<div class="insp">${sketch}<span>Inspiration photo from the form (sample order)</span></div>`:'';
-  return `<div class="mdia" id="dmedia">${art}${ph}${warn}</div>`};
+  const has=art||ph;if(!has&&!warn)return'';const on=S.showMedia!==false,n=(m.artFull?1:0)+got;
+  return `<div class="mdia" id="dmedia"><button type="button" class="mtog" data-mtog="1" aria-expanded="${on}"><span><b>Design and photos</b><small>${m.artFull?'Painted design':''}${m.artFull&&got?', ':''}${got?`${got} photo${got>1?'s':''}`:''}</small></span><i class="chev" aria-hidden="true"></i></button>${on?`<div class="mbody">${art}${ph}</div>`:''}${warn}</div>`};
 const renderMedia=o=>{const el=$('dmedia')||document.querySelector('#drawer .mdia');if(el)el.outerHTML=mediaHTML(o)};
 const zoom=(o,k)=>{const m=mediaOf(o);if(!m)return;const L=[...(m.artFull?[{u:m.artFull,c:first(o)+"'s design"}]:[]),...m.photos.map((p,i)=>({u:p.url,c:'Photo '+(i+1)+(p.name?', '+p.name:'')}))];let i=k==='art'?0:(m.artFull?1:0)+(+k.slice(1));
   let lb=$('lb');if(!lb){lb=document.createElement('div');lb.id='lb';lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');document.body.appendChild(lb)}
@@ -873,7 +875,7 @@ const reminders=()=>S.orders.filter(o=>o.bday&&o.status==='done').map(o=>({o,on:
 const urg=o=>{if(o.status!=='new'&&o.status!=='invoiced')return'';const g=gap(TODAY,o.pickup);return g<0?'':g===0?'Due today':g===1?'Tomorrow':g===2?'In 2 days':''};
 const card=o=>{const c=custOf(o),n=c?c.orders.length:1;return `<button type="button" class="slip s-${o.status}${urg(o)?' urg':''}${o.id===last?' land':''}${sf&&sf!==o.status?' dim':''}" data-open="${o.id}">
 <span class="row"><span class="tm${o.time?'':' no'}">${o.time?t12(o.time):'Time not set'}</span><span class="amt">${money(total(o))}</span></span>
-<b class="nm">${esc(o.name)}</b><span class="sp">${esc(spec(o))}</span>${artOf(o)?`<img class="artth" src="${artOf(o)}" alt="Painted design" loading="lazy">`:o.text?`<span class="wr">${esc(o.text)}</span>`:''}
+<b class="nm">${esc(o.name)}</b><span class="sp">${esc(spec(o))}</span>${o.text?`<span class="wr">${esc(o.text)}</span>`:''}
 ${trk(o.status)}<span class="row st"><span class="stl">${ST[o.status]}${urg(o)?`<span class="urgb">${urg(o)}</span>`:''}</span>${who(o)?`<span class="who">${who(o)}</span>`:''}</span>
 ${n>1?`<span class="sp">${ord(n)} order with you</span>`:''}</button>`};
 const byTime=(a,b)=>(a.time||'99')<(b.time||'99')?-1:(a.time||'99')>(b.time||'99')?1:a.name<b.name?-1:1;
@@ -1521,6 +1523,7 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   if(e.target.id==='scrim'){closeD();return}
   if(e.target.classList.contains('pback')){closePop();return}
   if(!t)return;
+  if(t.dataset.mtog){S.showMedia=S.showMedia===false;save();const o=S.orders.find(x=>x.id===openId);if(o){renderMedia(o);const b=document.querySelector('#dmedia .mbody');if(b&&!RM())b.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'})}return}
   if(t.dataset.zoom){const o=S.orders.find(x=>x.id===openId);if(o)zoom(o,t.dataset.zoom);return}
   if(t.dataset.mc){const o=S.orders.find(x=>x.id===openId);if(o)openMc(o,t.dataset.mc);return}
   if(t.dataset.mt&&mc){const o=S.orders.find(x=>x.id===mc.id);if(o){mc.k=t.dataset.mt;mc.body=TPL[mc.k][1](o);mc.subj=mc.k==='ask'||mc.k==='change'?'Quick question about your cake order':subjOf(o);renderDrawer();$('mc-body')&&$('mc-body').focus()}return}
