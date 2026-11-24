@@ -297,7 +297,8 @@ const FC0={live:true,title:'Cake order form',thanks:'Thank you! Your order is in
 const KEY='mfb-book-v2',INBOX='mfb-inbox',DRAFT='mfb-order-draft';
 let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 const merge=(a,b)=>{const o={...a};for(const k in b)o[k]=b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k])?merge(a[k],b[k]):b[k];return o};
-const PREV=/[?&]preview=1/.test(location.search),SRC=S&&(PREV&&S.fcd?{...S.fcd,live:true}:S.fc);const F=SRC?merge(FC0,SRC):FC0;
+const FCV=3;if(S&&S.fc&&S.fc.ver!==FCV){S.fc=null;S.fcd=null}
+const PREV=/[?&]preview=1/.test(location.search),SRC=S&&S.fc&&(PREV&&S.fcd?{...S.fcd,live:true}:S.fc);const F=SRC?merge(FC0,SRC):FC0;
 let inbox=[];try{inbox=JSON.parse(localStorage.getItem(INBOX))||[]}catch(e){}
 const ORDERS=[...(S&&Array.isArray(S.orders)?S.orders:[]),...inbox];
 const CAP=S&&S.cap||3,CAPD=S&&S.capd||{},CLOSED=S&&S.closed||[],EXTRA=S&&S.extra||[];
