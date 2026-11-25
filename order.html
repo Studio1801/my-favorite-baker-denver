@@ -362,7 +362,7 @@ const BLANK={size:'',qty:1,shape:'Round',flavor:'',filling:'',frosting:'Vanilla'
 let O={...BLANK};try{const d=JSON.parse(localStorage.getItem(DRAFT));if(d)O={...BLANK,...d}}catch(e){}
 /* demo mode for recordings: /order?demo=1 refills every field on each refresh */
 const DEMO=/[?&]demo=1/.test(location.search);
-if(DEMO){let pk='';for(let i=1;i<60&&!pk;i++){const d=add(TODAY,i);if(dayInfo(d).k==='ok')pk=d}
+if(DEMO){let pk=dayInfo('2026-11-27').k==='ok'?'2026-11-27':'';for(let i=1;i<60&&!pk;i++){const d=add(TODAY,i);if(dayInfo(d).k==='ok')pk=d}
   O={...BLANK,size:'classic',qty:1,shape:'Round',flavor:'Raspberry lemon',filling:'Raspberry jam',frosting:'Vanilla',colors:['pink','white','gold'],text:'Hi handsome',addons:['Cherries','Bows','Disco balls'],
     forWho:'Myself, obviously',notes:'Please make the writing extra big so everyone at the party can read it. Disco balls on both sides, more sparkle is always better.',allergies:'None',heard:'Instagram',pickup:pk,pk:'me',
     name:'Handsome Kevin',email:'handsome.kevin@example.com',phone:'(720) 555-0148',ig:'@handsomekevin',ack:true,
