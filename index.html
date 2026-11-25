@@ -539,6 +539,8 @@ i.bp{background:var(--ink)}i.bu{background:#f2bfca}
 /* urgency */
 .slip.urg{box-shadow:inset 0 0 0 1.5px #ecc06a,0 8px 18px -14px rgba(138,90,0,.5)}
 .urgb{display:inline-block;vertical-align:1px;background:#fff1d6;color:#8a5a00;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;margin-left:6px;white-space:nowrap}
+.dfoot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px}.back.cx{color:var(--cherry)}
+.cxl{flex-basis:100%;background:#fff1f3;border-radius:16px;padding:14px;display:flex;flex-wrap:wrap;gap:8px}.cxl p{flex-basis:100%;margin:0 0 4px;font-size:14.5px}.btn.cxly{background:var(--cherry)}
 .mlog{list-style:none;margin:0;padding:0}.mlog li{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px}
 .mlog i{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1.5px var(--mute)}.mlog i.ok{background:var(--c-paid);box-shadow:none}
 .mlog span{flex:1}.mlog em{font-style:normal;color:var(--soft);font-size:13px;white-space:nowrap}.mlog li.sch{color:var(--soft)}
@@ -1448,7 +1450,7 @@ const renderDrawer=()=>{const o=S.orders.find(x=>x.id===openId);if(!o){closeD();
   ${pk==='other'?`<div class="g2"><label class="f" for="d-pn">Name<input id="d-pn" value="${esc(o.picker.name)}"></label><label class="f" for="d-pp">Phone<input id="d-pp" inputmode="tel" value="${esc(o.picker.phone)}"></label></div>`:''}
   <h4>About the order</h4>${kv('For',esc(o.forWho))}${kv('Allergies',esc(o.allergies),o.allergies&&o.allergies!=='None'?'hot2':'')}${kv('Found you through',esc(o.heard||''))}${(o.extra||[]).map(([k,v])=>kv(esc(k),esc(v))).join('')}${kv('Order number',esc(o.no||''))}${kv('Ordered',wds(o.placed)+(o.via==='web'?', on your order form':''))}
   ${mailHTML(o)}${msgs}<h4>Price</h4><table class="price">${lines(o).map(l=>`<tr><td>${esc(l[0])}</td><td>$${l[1]}</td></tr>`).join('')}<tr class="tt"><td>Total</td><td>$${total(o)}</td></tr></table>
-  <h4>Contact</h4>${kv('Name',esc(o.name))}${kv('Phone',`<a href="tel:${esc(o.phone.replace(/[^\d+]/g,''))}">${esc(o.phone)}</a>`)}${kv('Email',`<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`)}${o.ig?kv('Instagram',esc(o.ig)):''}${o.status!=='new'?'<button type="button" class="back" data-act="back">Move back a step</button>':''}`};
+  <h4>Contact</h4>${kv('Name',esc(o.name))}${kv('Phone',`<a href="tel:${esc(o.phone.replace(/[^\d+]/g,''))}">${esc(o.phone)}</a>`)}${kv('Email',`<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`)}${o.ig?kv('Instagram',esc(o.ig)):''}<div class="dfoot">${o.status!=='new'?'<button type="button" class="back" data-act="back">Move back a step</button>':''}${cxl===o.id?`<div class="cxl" role="alertdialog" aria-label="Cancel order"><p>Cancel ${esc(first(o))}'s order? It comes off your board and frees the ${md(o.pickup)} spot.</p><button type="button" class="btn cxly" data-act="cxlyes">Yes, cancel it</button><button type="button" class="btn soft" data-act="cxlno">Keep order</button></div>`:'<button type="button" class="back cx" data-act="cxl">Cancel this order</button>'}</div>`};
 const openD=id=>{const was=!!openId&&$('drawer').classList.contains('on');openId=id;renderDrawer();$('drawer').scrollTop=0;$('drawer').classList.add('on');$('drawer').setAttribute('aria-hidden','false');$('scrim').classList.add('on');$('x')?.focus({preventScroll:true});
   if(!RM()&&!was)[...$('drawer').children].slice(0,8).forEach((c,i)=>c.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:420,delay:120+i*35,easing:EZ,fill:'backwards'}))};
 const closeD=()=>{mc=null;openId=null;$('drawer').classList.remove('on');$('drawer').setAttribute('aria-hidden','true');$('scrim').classList.remove('on')};
@@ -1506,6 +1508,7 @@ const route=()=>{let h=location.hash.slice(1);if(!VIEWS[h])h='week';if(h==='cust
   if(h==='form')formDirty=true;render();window.scrollTo(0,0);moveInd(!firstRoute);
   const v=$('v-'+h);if(!firstRoute&&!RM()&&v.animate)v.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:440,easing:EZ});firstRoute=false};
 addEventListener('resize',()=>{clearTimeout(window.__rz);window.__rz=setTimeout(()=>{moveInd(false);const m=innerWidth<640;if(m!==window.__mob){window.__mob=m;if(cur==='money')render()}},150)});window.__mob=innerWidth<640;document.fonts&&document.fonts.ready.then(()=>moveInd(false));
+let cxl=null;
 const toast=(msg,undo)=>{undoFn=undo||null;$('toast').innerHTML=`<span>${esc(msg)}</span>${undo?'<button type="button" id="undo">Undo</button>':''}`;$('toast').classList.add('on');clearTimeout(tt);tt=setTimeout(()=>$('toast').classList.remove('on'),5000)};
 const copy=async t=>{try{await navigator.clipboard.writeText(t);return true}catch(e){return false}};
 const showBox=t=>{const b=$('cbx');if(!b)return false;b.hidden=false;b.value=t;b.focus();b.select();return true};
@@ -1633,6 +1636,9 @@ document.addEventListener('click',async e=>{if(e.target.closest('a[href^="tel"],
   else if(a==='paid')setSt(o,'paid',`${first(o)} is now Paid, baking.`);
   else if(a==='done')setSt(o,'done',`${first(o)}'s order is complete.`);
   else if(a==='back')setSt(o,PREV[o.status],'Moved back a step.');
+  else if(a==='cxl'){cxl=o.id;renderDrawer();setTimeout(()=>document.querySelector('.cxl')?.scrollIntoView({block:'center',behavior:RM()?'auto':'smooth'}),30)}
+  else if(a==='cxlno'){cxl=null;renderDrawer()}
+  else if(a==='cxlyes'){const i=S.orders.indexOf(o),nm=first(o);cxl=null;S.orders.splice(i,1);save();closeD();render();toast(`${nm}'s order was cancelled.`,()=>{S.orders.splice(i,0,o);save();render()})}
   else if(a==='ptext'){const txt=pickupText(o);if(await copy(txt))toast('Pickup text copied. Paste it in a DM or text.');else{showBox(txt);toast('Copy the text from the box.')}}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(popD)closePop();else if(openId)closeD();else if(zd&&cur==='week')zoomOut()}
