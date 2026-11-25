@@ -365,7 +365,7 @@ const DEMO=/[?&]demo=1/.test(location.search);
 if(DEMO){let pk='';for(let i=1;i<60&&!pk;i++){const d=add(TODAY,i);if(dayInfo(d).k==='ok')pk=d}
   O={...BLANK,size:'classic',qty:1,shape:'Heart',flavor:'Raspberry lemon',filling:'Raspberry jam',frosting:'Vanilla',colors:['pink','white'],text:'Happy 30th Jess',addons:['Cherries','Bows'],
     forWho:'My sister',notes:'Could the cherries go on the left side? She loves a vintage look.',allergies:'None',heard:'Instagram',pickup:pk,pk:'me',
-    name:'Jess Moreno',email:'jess.moreno@example.com',phone:'(720) 555-0148',ig:'@jessmoreno',ack:true,
+    name:'Handsome Kevin',email:'handsome.kevin@example.com',phone:'(720) 555-0148',ig:'@handsomekevin',ack:true,
     art:{ops:[{t:'pipe',c:'#ffffff',s:.03,p:Array.from({length:49},(_,i)=>{const t=i/48*Math.PI*2;return[+(.5+16*Math.sin(t)**3*.0205).toFixed(3),+(.5-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*.0235).toFixed(3)]})},
       {t:'stamp',k:'cherry',x:.3,y:.38,s:.11,c:'#c41e3a'},{t:'stamp',k:'cherry',x:.36,y:.6,s:.11,c:'#c41e3a'},{t:'stamp',k:'bow',x:.5,y:.25,s:.15,c:'#f2a1b4'}]}};
   try{localStorage.setItem(DRAFT,JSON.stringify(O))}catch(e){}}
