@@ -356,13 +356,13 @@ const dayInfo=d=>{
   const n=ORDERS.filter(o=>o.pickup===d).length,cap=CAPD[d]||CAP;if(n>=cap)return{k:'full'};
   return{k:'ok',rush,left:cap-n}};
 
-addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==INBOX)return;readAvail();if(typeof refresh==='function'&&$('s-pickup')){if(O.pickup&&dayInfo(O.pickup).k!=='ok'){O.pickup='';keep()}refresh(['pickup','review'])}});
+addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==INBOX)return;readAvail();if(typeof refresh==='function'&&$('s-pickup')){if(!DEMO&&O.pickup&&dayInfo(O.pickup).k!=='ok'){O.pickup='';keep()}refresh(['pickup','review'])}});
 /* ---------- order draft ---------- */
 const BLANK={size:'',qty:1,shape:'Round',flavor:'',filling:'',frosting:'Vanilla',colors:[],text:'',addons:[],forWho:'',notes:'',allergies:'',heard:'',colOther:'',pickup:'',pk:'me',pkname:'',pkphone:'',name:'',email:'',phone:'',ig:'',cq:{},ack:false};
 let O={...BLANK};try{const d=JSON.parse(localStorage.getItem(DRAFT));if(d)O={...BLANK,...d}}catch(e){}
 /* demo mode for recordings: /order?demo=1 refills every field on each refresh */
 const DEMO=/[?&]demo=1/.test(location.search);
-if(DEMO){let pk=dayInfo('2026-11-27').k==='ok'?'2026-11-27':'';for(let i=1;i<60&&!pk;i++){const d=add(TODAY,i);if(dayInfo(d).k==='ok')pk=d}
+if(DEMO){const pk='2026-11-27';
   O={...BLANK,size:'classic',qty:1,shape:'Round',flavor:'Raspberry lemon',filling:'Raspberry jam',frosting:'Vanilla',colors:['pink','white','gold'],text:'Hi handsome',addons:['Cherries','Bows','Disco balls'],
     forWho:'Myself, obviously',notes:'Please make the writing extra big so everyone at the party can read it. Disco balls on both sides, more sparkle is always better.',allergies:'None',heard:'Instagram',pickup:pk,pk:'me',
     name:'Handsome Kevin',email:'handsome.kevin@example.com',phone:'(720) 555-0148',ig:'@handsomekevin',ack:true,
@@ -477,7 +477,7 @@ const check=i=>{const e={},Q=F.q,k=STEPS[i][0];
     if(Q.forWho.on&&Q.forWho.req&&!O.forWho.trim())e.forWho='Who is the cake for?';
     if(Q.allergies.on&&Q.allergies.req&&!O.allergies.trim())e.allergies='Add any allergies, or type None.';
     if(Q.heard&&Q.heard.on&&Q.heard.req&&!O.heard.trim())e.heard='Let Carlie know how you found her.'}
-  if(k==='pickup'){if(!O.pickup)e.pickup='Pick a pickup day.';else if(dayInfo(O.pickup).k!=='ok')e.pickup='That day is not available anymore. Pick another one.'}
+  if(k==='pickup'){if(!O.pickup)e.pickup='Pick a pickup day.';else if(!DEMO&&dayInfo(O.pickup).k!=='ok')e.pickup='That day is not available anymore. Pick another one.'}
   if(k==='you'){if(!O.name.trim())e.name='Add your name.';if(!/^\S+@\S+\.\S+$/.test(O.email.trim()))e.email='Add an email that works.';if(O.phone.replace(/\D/g,'').length<10)e.phone='Add a 10 digit phone number.';
     if(Q.ig.on&&Q.ig.req&&!O.ig.trim())e.ig='Add your Instagram.';
     F.custom.filter(c=>c.on&&c.req&&c.l.trim()).forEach(c=>{const v=O.cq[c.id];if(!v||(Array.isArray(v)&&!v.length)||!String(v).trim())e['cq_'+c.id]='This one is required.'})}
